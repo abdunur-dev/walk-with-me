@@ -78,6 +78,7 @@ chat_limit = RateLimiter(int(os.getenv("CHAT_RATE_LIMIT", "20")), 60)
 handoff_limit = RateLimiter(5, 600)
 sms_limit = RateLimiter(10, 300)
 subscribe_limit = RateLimiter(5, 600)
+speech_limit = RateLimiter(4, 900)
 
 
 # ───────── Phone numbers (Ethiopia) ─────────

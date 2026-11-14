@@ -14,7 +14,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from . import db, retrieval
 from .common import ApiError, ensure_env_staff, error_response
 from .config import ROOT, settings
-from .routers import channels, handoff, jobs, public
+from .routers import channels, handoff, jobs, public, speech
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("wwm")
@@ -37,6 +37,8 @@ async def lifespan(app: FastAPI):
     yield
     for t in tasks:
         t.cancel()
+    from .routers.speech import close_speech_rate_limiter
+    await close_speech_rate_limiter()
     if settings.run_background:
         from .telegram import bot
         await bot.stop()
@@ -56,6 +58,19 @@ async def cors_and_headers(request: Request, call_next):
     """Public endpoints allow any origin (the widget runs on other sites and on file://) and use no cookies.
     Staff and teacher endpoints get no CORS headers, so browsers block cross-origin access."""
     path = request.url.path
+    if request.method == "POST" and path == "/v1/speech/translate":
+        content_length = request.headers.get("content-length")
+        if content_length and content_length.isdigit():
+            max_body_bytes = max(1, settings.speech_max_upload_mb) * 1024 * 1024 + 256 * 1024
+            if int(content_length) > max_body_bytes:
+                resp = error_response(413, "audio_too_large",
+                                      f"Audio must be {settings.speech_max_upload_mb} MB or smaller.",
+                                      "Trim the recording or choose a smaller audio file.")
+                resp.headers["Access-Control-Allow-Origin"] = "*"
+                resp.headers["Access-Control-Allow-Methods"] = "GET, POST, DELETE, OPTIONS"
+                resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+                resp.headers["X-Content-Type-Options"] = "nosniff"
+                return resp
     private = path.startswith("/v1/staff") or path.startswith("/v1/teacher")
     dev_origin = os.getenv("CORS_DEV_ORIGIN", "")
     if dev_origin and request.headers.get("origin") == dev_origin and path.startswith("/v1/"):
@@ -110,7 +125,7 @@ async def server_error(request: Request, e: Exception):
     return error_response(500, "server_error", "Something went wrong on the server.", "Try again in a minute.")
 
 
-for r in (public.router, handoff.router, jobs.router, channels.router):
+for r in (public.router, handoff.router, jobs.router, channels.router, speech.router):
     app.include_router(r)
 
 

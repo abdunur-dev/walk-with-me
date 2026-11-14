@@ -79,6 +79,40 @@ Grounding rules, enforced in `api/app/chat_service.py`:
 
 `GET /v1/status` shows which provider is configured and which one is actually answering.
 
+## Amharic voice translation (optional)
+
+The `/site/speech` page provides a keyboard- and screen-reader-accessible upload flow. `POST /v1/speech/translate` requires explicit consent, allows 15 MB / 2 minutes, limits each client to four requests per 15 minutes, holds the uploaded recording in a temporary file, and deletes it after processing. Results are returned to the browser and are not saved in the app database. A hosted translation endpoint receives the transcript text. Enable the feature with `SPEECH_TRANSLATION_ENABLED=1` only after configuring and validating the speech runtime and translation endpoint.
+
+The backend pipeline in `api/app/speech_translation.py` transcribes Amharic audio with Addis AI's [Scribe Streaming model](https://huggingface.co/addisai/addis-scribe-streaming), resampling and downmixing every input to 16 kHz mono WAV first. It then translates the transcript with the documented Addis AI Amharic instruction fine-tune [Gemma 2 27B](https://huggingface.co/b1n1yam/gemma-2-27b-amharic-alpaca-sft). The standard NeMo Scribe checkpoint is about 2.5 GB. The translation card describes an early research release and does not report translation-specific evaluation, so have a fluent Amharic speaker review translations before relying on them.
+
+Keep this separate from the regular API environment: NeMo and CUDA packages are large and are not required to run Walk With Me. Use a compatible Python 3.11/3.12 environment and install the optional requirements (NeMo also needs system audio libraries such as `libsndfile1` and `ffmpeg`):
+
+```sh
+python -m venv .venv-speech
+.venv-speech/bin/pip install -r requirements-speech.txt
+```
+
+For translation, either set `HF_INFERENCE_ENDPOINT_URL` to a deployed Hugging Face Inference Endpoint that serves the selected model and `HF_TOKEN` if it is private, or use local translation on a CUDA GPU with at least 20 GiB free VRAM. Local weights load in 4-bit; there is no full-precision CPU fallback. The model is not currently deployed through Hugging Face Inference Providers, so a generic serverless model ID is not a substitute for an endpoint URL. The repository also contains a 499 MB Q5 GGUF Scribe export, but its report says NeMo parity, Amharic accuracy, and runtime/mobile behavior are unverified; this app keeps the documented NeMo checkpoint as its default until that smaller export is validated.
+
+Run the CLI pipeline:
+
+```sh
+export HF_INFERENCE_ENDPOINT_URL=https://YOUR-ENDPOINT.endpoints.huggingface.cloud
+export HF_TOKEN=YOUR_HF_TOKEN
+.venv-speech/bin/python scripts/speech_translate.py recording.wav --target-language English
+```
+
+Set the endpoint variables in `.env` instead if you prefer; the CLI reads that file. Use `--json` for structured output and `--target-language` to choose the translation language (English is the default). The service function `translate_text()` also accepts a source language for text-to-text translation. First use downloads the 2.5 GB ASR checkpoint and, for local LLM mode, the translation weights. The model card uses OpenMDW-1.1 for Scribe and Apache-2.0 for the Gemma fine-tune; check each license and its terms before redistributing model weights.
+
+To serve the upload feature in production, install `python-multipart` (included in the normal API requirements) plus `requirements-speech.txt`, install system `ffmpeg` and `libsndfile`, configure the translation endpoint, `SPEECH_TRANSLATION_ENABLED=1`, `APP_ENV=production` and `SPEECH_RATE_LIMIT_REDIS_URL`, and run one API worker for each local ASR model instance. The production route fails closed if Redis is not configured. For Docker Compose, set `SPEECH_RATE_LIMIT_REDIS_URL=redis://speech-rate-limit:6379/0`, build the opt-in image, then start Redis and the Nginx upload-size limit:
+
+```sh
+docker compose build --build-arg INSTALL_SPEECH_DEPS=1 api
+docker compose --profile speech --profile speech-edge up
+```
+
+The API is bound to localhost port 8000; the included Nginx edge listens on 8080 and caps request bodies at 16 MB. Put your TLS/load-balancing proxy in front for a public deployment. The API image stays small by default. Provide enough memory and a compatible NVIDIA runtime for GPU inference when using local translation. Monitor model memory, latency and endpoint spend. If the host cannot run NeMo, keep the feature flag off until an ASR service is configured; the hosted translation endpoint handles only the text-to-text step.
+
 ## Telegram and SMS
 
 - **Telegram:** create a bot with BotFather, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_BOT_USERNAME`. Add the bot to a staff group and set `TELEGRAM_STAFF_CHAT_ID`; new help requests are posted there, and staff can answer by replying to the bot's message. Long polling by default; set `TELEGRAM_MODE=webhook` with a public `PUBLIC_BASE_URL` for production. Commands: `/start`, `/help`, `/ai`, `/jobs`, `/alerts`, `/accommodation`, `/stop`.

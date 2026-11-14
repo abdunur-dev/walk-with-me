@@ -55,6 +55,11 @@ class Settings:
     data_dir: Path = field(default_factory=lambda: Path(os.getenv("DATA_DIR", str(ROOT / "data"))))
     scheduler_minutes: float = field(default_factory=lambda: _f("ALERT_INTERVAL_MINUTES", "15"))
     run_background: bool = field(default_factory=lambda: os.getenv("RUN_BACKGROUND", "1") == "1")
+    speech_translation_enabled: bool = field(default_factory=lambda: os.getenv("SPEECH_TRANSLATION_ENABLED", "0") == "1")
+    speech_max_upload_mb: int = field(default_factory=lambda: int(os.getenv("SPEECH_MAX_UPLOAD_MB", "15")))
+    speech_max_duration_seconds: int = field(default_factory=lambda: int(os.getenv("SPEECH_MAX_DURATION_SECONDS", "120")))
+    app_env: str = field(default_factory=lambda: os.getenv("APP_ENV", "development").lower())
+    speech_rate_limit_redis_url: str = field(default_factory=lambda: os.getenv("SPEECH_RATE_LIMIT_REDIS_URL", ""))
 
 
 settings = Settings()

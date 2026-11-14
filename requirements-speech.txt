@@ -1,0 +1,13 @@
+# Optional local speech and translation stack; install in a dedicated Python 3.11/3.12 env.
+# NeMo model card CUDA runtime requirements:
+nemo_toolkit[asr]>=3.0
+torch>=2.6
+transformers>=4.57
+accelerate>=1.2
+bitsandbytes>=0.45
+librosa>=0.10
+soundfile>=0.12
+huggingface_hub>=0.27
+numpy<2.4
+numba-cuda[cu12]
+nvidia-nvjitlink-cu12>=12.9

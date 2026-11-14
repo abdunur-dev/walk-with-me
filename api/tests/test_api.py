@@ -7,6 +7,7 @@ def test_health_and_openapi(client):
     assert client.get("/healthz").json() == {"ok": True}
     spec = client.get("/openapi.json").json()
     assert "/v1/chat" in spec["paths"] and "/v1/jobs" in spec["paths"]
+    assert "/v1/speech/translate" in spec["paths"]
 
 
 def test_error_shape(client):
