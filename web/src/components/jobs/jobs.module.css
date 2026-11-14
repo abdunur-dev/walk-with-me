@@ -1,0 +1,33 @@
+.filters { display: grid; gap: var(--space-4); align-items: end; margin-block: var(--space-6) var(--space-4); }
+@media (min-width: 900px) { .filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr) auto; } }
+.filters > * { min-inline-size: 0; }
+.filters :global(.field) { margin: 0; }
+.supports { border: var(--border); border-radius: var(--radius-control); background: var(--input-bg); color: var(--indigo); }
+.supports > summary { min-block-size: 52px; display: flex; align-items: center; padding: 0 var(--space-4); cursor: pointer; font-weight: 700; }
+.supports :global(.checks) { padding: 0 var(--space-4) var(--space-3); }
+
+.layout { display: grid; gap: var(--space-6); align-items: start; margin-block-start: var(--space-6); }
+@media (min-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); } .alerts { position: sticky; top: 96px; order: 2; } }
+.layout > * { min-inline-size: 0; }
+
+.alerts :global(.input) { background: var(--white); color: var(--indigo); }
+.alerts :global(.field) > label, .alerts legend, .alerts :global(.hint) { color: var(--card-dark-text); }
+.alerts h2 { color: var(--card-dark-text); }
+.alerts :global(.error-summary) { border-color: var(--card-dark-text); }
+.alerts :global(.error-summary) a { color: var(--card-dark-text); }
+.alerts :global(.error-text)::before { background: var(--white); color: var(--indigo); }
+.stopBox { margin-block-start: var(--space-5); border-block-start: 2px solid var(--slate); padding-block-start: var(--space-3); }
+.stopBox > summary { min-block-size: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
+
+.list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-6); }
+.job h3 { margin-block-end: var(--space-2); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: center; margin-block-end: var(--space-3); }
+.job p { font-size: var(--text-sm); }
+
+.status:empty { display: none; }
+.status { margin-block-start: var(--space-4); }
+.status p { margin-block-end: var(--space-2); }
+.problem { font-weight: 700; }
+
+.stepLabel { font-family: var(--font-mono); font-size: var(--text-sm); margin: 0 0 var(--space-2); }
+.dialogBody h2:focus-visible { outline-offset: 4px; }

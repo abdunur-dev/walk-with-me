@@ -1,0 +1,15 @@
+.docs { display: grid; gap: var(--space-6); }
+@media (min-width: 960px) { .docs { grid-template-columns: 260px minmax(0, 1fr); align-items: start; } .toc { position: sticky; top: 96px; } }
+.docs > * { min-inline-size: 0; }
+.toc { padding: var(--space-4) var(--space-5); }
+.toc summary { font-family: var(--font-mono); font-weight: 700; min-block-size: 44px; display: flex; align-items: center; cursor: pointer; }
+.toc ol { padding-inline-start: var(--space-5); margin: 0; }
+.toc a { display: inline-block; padding-block: var(--space-2); }
+.body section { padding-block: var(--space-6) var(--space-2); }
+.body section + section { border-block-start: 2px solid var(--mist); }
+.body section > h2 { margin-block-end: var(--space-5); }
+.body h3 { margin-block-start: var(--space-5); }
+.body ul, .body ol { padding-inline-start: var(--space-5); max-inline-size: var(--measure); }
+.body li { margin-block-end: var(--space-2); }
+.body :global(.code), .body :global(.table-wrap) { margin-block: var(--space-4); }
+.plain { background: var(--mist); border-radius: var(--radius-control); padding: var(--space-4); overflow-x: auto; margin-block: var(--space-4); }

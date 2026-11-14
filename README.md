@@ -10,7 +10,8 @@ Digital Bridge Accessibility Hackathon 2026 · Track 3.
 |---|---|
 | `api/` | FastAPI app: chat with retrieval and citations, AI providers, human help (REST + WebSocket), jobs, alerts, SMS, Telegram bot, teacher view |
 | `widget/` | `walk-with-me.js` (no build step, Shadow DOM), `actions.js` (Show me targets), `faq-bundle.js` (offline answers) |
-| `site/` | Home, install docs, jobs, staff console, teacher view, SMS simulator, 404/500 |
+| `web/` | The website in Next.js (static export): home, install docs, jobs, staff console, teacher view, SMS simulator, 404/500 |
+| `site/` | Older plain-HTML version of the site, used only if `web/out` has not been built |
 | `savanna/` | **Stand-in** Savanna pages used for the demo. Replace with the real starter (see below) |
 | `data/` | `course.json` (generated), `faq.json` (human-written), `jobs.json` (20 sample jobs) |
 | `scripts/` | `extract_course.py`, `build_faq_bundle.py`, `seed.py` |
@@ -27,23 +28,28 @@ docker compose up --build
 
 Open http://localhost:8000. Nothing else is needed: `AI_PROVIDER=offline` answers from the human-written FAQ and course text.
 
-### Without Docker (Python 3.11+)
+### Without Docker (Python 3.11+, Node 20+)
 
 ```sh
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt        # Windows: .venv\Scripts\pip
 cp .env.example .env
+(cd web && npm ci && npm run build)              # builds the site to web/out
 .venv/bin/uvicorn app.main:app --app-dir api --port 8000
 ```
 
+The API serves the built site at `/site`. To work on the site with hot reload, run the API with
+`CORS_DEV_ORIGIN=http://localhost:3000`, then in `web/`: `NEXT_PUBLIC_API_BASE=http://localhost:8000 npm run dev`
+and open http://localhost:3000/site.
+
 | Page | URL |
 |---|---|
-| Home | `/site/index.html` |
+| Home | `/site/` |
 | Savanna demo with the widget | `/savanna/pages/concept-with-navigation.html` |
-| Jobs | `/site/jobs.html` |
-| Staff console (needs `STAFF_TOKEN`) | `/site/staff.html` |
-| Teacher view (needs `STAFF_TOKEN`) | `/site/teacher.html` |
-| SMS simulator | `/site/sms-sim.html` |
+| Jobs | `/site/jobs` |
+| Staff console (needs `STAFF_TOKEN`) | `/site/staff` |
+| Teacher view (needs `STAFF_TOKEN`) | `/site/teacher` |
+| SMS simulator | `/site/sms-sim` |
 | API reference | `/docs` (Swagger UI), `/openapi.json` |
 
 ### Add it to any page (Level 1)

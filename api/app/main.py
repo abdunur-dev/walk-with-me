@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -56,6 +57,15 @@ async def cors_and_headers(request: Request, call_next):
     Staff and teacher endpoints get no CORS headers, so browsers block cross-origin access."""
     path = request.url.path
     private = path.startswith("/v1/staff") or path.startswith("/v1/teacher")
+    dev_origin = os.getenv("CORS_DEV_ORIGIN", "")
+    if dev_origin and request.headers.get("origin") == dev_origin and path.startswith("/v1/"):
+        # Local development only: lets `next dev` on another port use every endpoint, staff included.
+        resp = JSONResponse({}, status_code=204) if request.method == "OPTIONS" else await call_next(request)
+        resp.headers["Access-Control-Allow-Origin"] = dev_origin
+        resp.headers["Access-Control-Allow-Methods"] = "GET, POST, DELETE, OPTIONS"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        resp.headers["Vary"] = "Origin"
+        return resp
     if request.method == "OPTIONS" and path.startswith("/v1/") and not private:
         resp = JSONResponse({}, status_code=204)
     else:
@@ -85,7 +95,7 @@ async def validation_error(_: Request, e: RequestValidationError):
 
 @app.exception_handler(StarletteHTTPException)
 async def http_error(request: Request, e: StarletteHTTPException):
-    page = ROOT / "site" / "404.html"
+    page = SITE_DIR / "404.html"
     if e.status_code == 404 and not request.url.path.startswith("/v1/") and page.exists():
         return FileResponse(page, status_code=404)
     return error_response(e.status_code, "http_error", str(e.detail), "Check the address and try again.")
@@ -94,7 +104,7 @@ async def http_error(request: Request, e: StarletteHTTPException):
 @app.exception_handler(Exception)
 async def server_error(request: Request, e: Exception):
     log.exception("unhandled error on %s", request.url.path)
-    page = ROOT / "site" / "500.html"
+    page = SITE_DIR / "500.html"
     if not request.url.path.startswith("/v1/") and page.exists():
         return FileResponse(page, status_code=500)
     return error_response(500, "server_error", "Something went wrong on the server.", "Try again in a minute.")
@@ -116,5 +126,20 @@ def home():
     return RedirectResponse("/site/index.html")
 
 
-for name in ("site", "widget", "savanna"):
+class PageFiles(StaticFiles):
+    """Static files that also answer /site/jobs with jobs.html (how `next build` exports pages)."""
+
+    async def get_response(self, path, scope):
+        last = path.rsplit("/", 1)[-1]
+        if last and "." not in last:
+            full, _ = self.lookup_path(path.rstrip("/") + ".html")
+            if full:
+                return await super().get_response(path.rstrip("/") + ".html", scope)
+        return await super().get_response(path, scope)
+
+
+# The site is the Next.js static export (web/out) when it has been built; otherwise the plain HTML in site/.
+SITE_DIR = ROOT / "web" / "out" if (ROOT / "web" / "out" / "index.html").exists() else ROOT / "site"
+app.mount("/site", PageFiles(directory=SITE_DIR, html=True), name="site")
+for name in ("widget", "savanna"):
     app.mount(f"/{name}", StaticFiles(directory=ROOT / name, html=True), name=name)

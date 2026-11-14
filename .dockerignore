@@ -1,0 +1,7 @@
+.venv
+var
+.env
+**/node_modules
+web/.next
+web/out
+tests/e2e/test-results
