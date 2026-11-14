@@ -52,6 +52,8 @@ and open http://localhost:3000/site.
 | SMS simulator | `/site/sms-sim` |
 | API reference | `/docs` (Swagger UI), `/openapi.json` |
 
+To show a tap-to-call staff contact in the help widget, set `STAFF_CONTACT_PHONE` in `.env` to the real support number (international format recommended). `STAFF_CONTACT_LABEL` changes its button label. The widget hides this option when no valid phone number is configured; no sample number is shipped.
+
 ### Add it to any page (Level 1)
 
 ```html

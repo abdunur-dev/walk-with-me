@@ -8,6 +8,7 @@
   .console:not(.hasDetail) .detailPane { display: none; }
 }
 .queuePane, .detailPane { min-inline-size: 0; }
+.queueSummary { font-size: var(--text-sm); font-weight: 700; }
 
 .queue { list-style: none; margin: 0 0 var(--space-4); padding: 0; display: grid; gap: var(--space-4); }
 .req {

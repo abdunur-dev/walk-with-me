@@ -7,9 +7,17 @@ from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 
 from .. import chat_service, db
+from ..config import settings
 from ..common import ApiError, chat_limit, new_id
 
 router = APIRouter(prefix="/v1", tags=["learner"])
+
+
+@router.get("/contact", summary="Public staff contact options")
+def contact():
+    # The number is deliberately deployment-configured; never invent or hard-code a hotline.
+    phone = "".join(ch for ch in settings.staff_contact_phone if ch.isdigit() or ch == "+")
+    return {"phone": phone, "label": settings.staff_contact_label}
 
 
 class SessionIn(BaseModel):
