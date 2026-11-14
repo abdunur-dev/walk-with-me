@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard · Savanna demo (stand-in)</title>
+<meta name="description" content="Stand-in for the Savanna dashboard, used to demo the Walk With Me helper.">
+<link rel="stylesheet" href="savanna.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to dashboard</a>
+<p class="standin">Savanna demo stand-in — replace with the real starter.</p>
+<header class="topbar">
+  <button type="button" class="hamburger" id="sidebar-toggle" aria-expanded="false" aria-controls="sidebar">Menu</button>
+  <a class="brand" href="index.html">Savanna <small>(demo stand-in)</small></a>
+  <div class="courses">
+    <button type="button" id="courses-dropdown" class="courses-toggle" aria-expanded="false" aria-controls="courses-list">My courses</button>
+    <ul id="courses-list" class="dropdown" hidden>
+      <li><a href="pages/concept-with-navigation.html">VA-1 Virtual assistant foundations</a></li>
+      <li><a href="index.html">Dashboard</a></li>
+    </ul>
+  </div>
+</header>
+
+<nav id="sidebar" class="sidebar" aria-label="Main menu" hidden>
+  <h2>Menu</h2>
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="pages/concept-with-navigation.html">Current lesson</a></li>
+  </ul>
+</nav>
+
+<main id="main" class="dash">
+  <h1>Welcome back</h1>
+  <p>You are in the Virtual Assistant programme. This week's work is below.</p>
+
+  <h2 id="week-heading">Weeks</h2>
+  <nav id="week-strip" class="week-strip" aria-label="Week strip">
+    <button type="button">1</button>
+    <button type="button" aria-current="true">2</button>
+    <button type="button">3</button>
+    <button type="button">4</button>
+    <button type="button">5</button>
+    <button type="button">6</button>
+  </nav>
+
+  <section class="card">
+    <h2 id="week-title">Week 2 work</h2>
+    <ul>
+      <li><a href="pages/concept-with-navigation.html">Concept: The future of the virtual assistant industry</a></li>
+      <li>Concept: Writing professional emails (opens next)</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Your progress</h2>
+    <p>Score so far: 72%.</p>
+    <button type="button" class="btn" id="score-details">Score details</button>
+    <button type="button" class="btn" id="programme-details">Programme details</button>
+  </section>
+</main>
+
+<dialog id="score-dialog" aria-labelledby="score-title">
+  <h2 id="score-title">Score details</h2>
+  <table>
+    <thead><tr><th scope="col">Week</th><th scope="col">Score</th></tr></thead>
+    <tbody><tr><td>Week 1</td><td>80%</td></tr><tr><td>Week 2</td><td>64%</td></tr></tbody>
+  </table>
+  <p><button type="button" class="btn" data-close>Close</button></p>
+</dialog>
+
+<dialog id="programme-dialog" aria-labelledby="programme-title">
+  <h2 id="programme-title">Programme details</h2>
+  <p>Virtual Assistant programme (sample). Runs for 12 weeks. Support contact: the help button on every page.</p>
+  <p><button type="button" class="btn" data-close>Close</button></p>
+</dialog>
+
+<script src="savanna.js"></script>
+<!-- Walk With Me: the one line a platform adds -->
+<script src="../widget/walk-with-me.js" data-api="http://localhost:8000" data-lang="en" defer></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher view · Walk With Me</title>
+<meta name="description" content="Questions learners ask most, with no names.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#352E72">
+<link rel="canonical" href="/site/teacher.html">
+<meta property="og:title" content="Teacher view · Walk With Me">
+<meta property="og:description" content="See which questions come up most, without names.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/site/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8F135'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23352E72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/site/tokens.css">
+<link rel="stylesheet" href="/site/base.css">
+<style>
+  .sort-btn { font: inherit; font-weight: 700; background: none; border: 0; color: var(--text); cursor: pointer; min-height: 44px; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+  td.num, th.num { text-align: end; }
+</style>
+<script src="/site/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/site/index.html"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#C8F135"/><path d="M9 16h14M16 9v14" stroke="#352E72" stroke-width="4" stroke-linecap="round"/></svg>Walk With Me</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/site/staff.html">Staff console</a></li>
+        <li><a href="/site/teacher.html" aria-current="page">Teacher view</a></li>
+        <li><a href="/site/docs.html">Docs</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="display-options" data-display-options></div>
+</header>
+
+<main id="main" class="wrap" style="padding-block: var(--space-7)">
+  <h1>Questions learners ask most</h1>
+  <p>From the last 7 days. No names, no session ids. A question shows only after several learners asked it.</p>
+
+  <form id="login" class="card" novalidate style="max-width: 36rem">
+    <div class="field">
+      <label for="token">Staff token</label>
+      <span class="hint" id="token-hint">You can paste it. It stays in this browser tab only.</span>
+      <input id="token" class="input" type="password" autocomplete="off" aria-describedby="token-hint">
+    </div>
+    <button type="submit" class="btn btn-primary">Show questions</button>
+    <div id="login-status" class="status-box" role="alert"></div>
+  </form>
+
+  <section id="results" hidden aria-labelledby="results-title">
+    <h2 id="results-title" tabindex="-1">Top questions</h2>
+    <p id="summary" role="status" aria-live="polite"></p>
+    <div class="row" style="margin-bottom: var(--space-4)">
+      <button type="button" class="btn btn-secondary" id="csv">Export CSV</button>
+    </div>
+    <div id="empty" class="card" hidden><p id="empty-text"></p></div>
+    <div class="table-wrap" id="table-wrap">
+      <table>
+        <caption class="visually-hidden">Questions, course section and how many times each was asked</caption>
+        <thead>
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Section</th>
+            <th scope="col" class="num" id="count-th" aria-sort="descending"><button type="button" class="sort-btn" id="sort">Times asked <span aria-hidden="true" id="sort-arrow">↓</span><span class="visually-hidden" id="sort-hint">, sorted most first. Press to sort fewest first.</span></button></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><div><p class="small">Questions are stored without any link to a learner and deleted after 90 days.</p></div></div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var token = null, items = [], desc = true;
+  try { token = sessionStorage.getItem("wwm.staffToken"); } catch (e) {}
+
+  function render() {
+    var sorted = items.slice().sort(function (a, b) { return desc ? b.count - a.count : a.count - b.count; });
+    var tb = $("rows"); tb.innerHTML = "";
+    sorted.forEach(function (i) {
+      var tr = document.createElement("tr");
+      var q = document.createElement("td"); q.textContent = i.question; q.setAttribute("dir", "auto"); tr.appendChild(q);
+      var s = document.createElement("td"); s.textContent = i.section_title; tr.appendChild(s);
+      var n = document.createElement("td"); n.className = "num"; n.textContent = i.count; tr.appendChild(n);
+      tb.appendChild(tr);
+    });
+    $("count-th").setAttribute("aria-sort", desc ? "descending" : "ascending");
+    $("sort-arrow").textContent = desc ? "↓" : "↑";
+    $("sort-hint").textContent = desc ? ", sorted most first. Press to sort fewest first." : ", sorted fewest first. Press to sort most first.";
+  }
+
+  function load(first) {
+    WWM.api("/v1/teacher/top-questions", { headers: { Authorization: "Bearer " + token } }).then(function (data) {
+      $("login").hidden = true; $("results").hidden = false;
+      items = data.items;
+      var empty = !items.length;
+      $("empty").hidden = !empty; $("table-wrap").hidden = empty; $("csv").hidden = empty;
+      $("empty-text").textContent = "No questions yet. Questions appear here once they have been asked by at least " + data.k_min + (data.k_min === 1 ? " learner." : " learners.");
+      $("summary").textContent = empty ? "" : items.length + (items.length === 1 ? " question" : " questions") + " asked at least " + data.k_min + " times in the last " + data.days + " days.";
+      render();
+      if (first) $("results-title").focus();
+    }, function (err) {
+      token = null; try { sessionStorage.removeItem("wwm.staffToken"); } catch (e) {}
+      $("login").hidden = false; $("results").hidden = true;
+      WWM.showError($("login-status"), err);
+    });
+  }
+
+  $("login").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!WWM.validate($("login"), { token: function (v) { return v ? null : "Enter the staff token."; } })) return;
+    token = $("token").value.trim();
+    try { sessionStorage.setItem("wwm.staffToken", token); } catch (err) {}
+    $("login-status").textContent = "";
+    load(true);
+  });
+  $("sort").addEventListener("click", function () { desc = !desc; render(); });
+  $("csv").addEventListener("click", function () {
+    fetch("/v1/teacher/top-questions?format=csv", { headers: { Authorization: "Bearer " + token } }).then(function (r) {
+      if (!r.ok) throw new Error("export failed");
+      return r.blob();
+    }).then(function (blob) {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = "top-questions.csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      WWM.announce("CSV file downloaded.");
+    }).catch(function () { WWM.announce("The export did not work. Try again."); });
+  });
+
+  if (token) load(false);
+})();
+</script>
+<!-- data-api="" means the API is on the same origin as this page. -->
+<script src="/widget/walk-with-me.js" data-api="" data-lang="en" defer></script>
+</body>
+</html>

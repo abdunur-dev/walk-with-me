@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMS simulator · Walk With Me</title>
+<meta name="description" content="Try the Walk With Me SMS commands without sending real messages.">
+<meta name="theme-color" content="#352E72">
+<link rel="canonical" href="/site/sms-sim.html">
+<meta property="og:title" content="SMS simulator · Walk With Me">
+<meta property="og:description" content="HELP, ASK, JOBS, ALERT and STOP by text message.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/site/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8F135'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23352E72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/site/tokens.css">
+<link rel="stylesheet" href="/site/base.css">
+<style>
+  .sim { display: grid; gap: var(--space-6); padding-block: var(--space-6); }
+  @media (min-width: 900px) { .sim { grid-template-columns: minmax(280px, 380px) 1fr; align-items: start; } }
+  .phone { border: 6px solid var(--indigo); border-radius: 36px; padding: var(--space-5) var(--space-4); background: var(--bg); box-shadow: var(--edge); }
+  .thread { list-style: none; margin: 0 0 var(--space-4); padding: var(--space-3); min-height: 320px; max-height: 460px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-2); background: var(--section-bg); border-radius: var(--radius-control); }
+  .thread li { max-width: 85%; padding: var(--space-3); border-radius: var(--radius-control); }
+  .out { align-self: flex-end; background: var(--card-dark); color: var(--card-dark-text); }
+  .in { align-self: flex-start; background: var(--bg); border: var(--border); }
+  .quick { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block-end: var(--space-4); }
+  .quick button { font: inherit; font-size: var(--text-sm); }
+</style>
+<script src="/site/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/site/index.html"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#C8F135"/><path d="M9 16h14M16 9v14" stroke="#352E72" stroke-width="4" stroke-linecap="round"/></svg>Walk With Me</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/savanna/pages/concept-with-navigation.html">Try it</a></li>
+        <li><a href="/site/jobs.html">Jobs</a></li>
+        <li><a href="/site/docs.html">Docs</a></li>
+        <li><a href="/site/sms-sim.html" aria-current="page">SMS simulator</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="display-options" data-display-options></div>
+</header>
+
+<main id="main" class="wrap">
+  <div class="sim">
+    <div>
+      <h1>SMS simulator</h1>
+      <p><strong>Simulator. No real messages are sent.</strong></p>
+      <p>Type a command as a learner with no data would. Replies and alerts appear in the phone.</p>
+      <div class="field">
+        <label for="from">Your phone number</label>
+        <span class="hint" id="from-hint">09… or 07… or +251…</span>
+        <input id="from" class="input" type="tel" inputmode="tel" value="0911000000" aria-describedby="from-hint">
+      </div>
+      <h2>Commands</h2>
+      <ul>
+        <li><code>HELP</code>: a person calls you back</li>
+        <li><code>ASK</code> and a question: a short answer from the course</li>
+        <li><code>JOBS driver adama</code>: up to 3 jobs</li>
+        <li><code>ALERT driver adama</code>, then <code>YES</code>: job alerts</li>
+        <li><code>STOP</code>: stop alerts</li>
+      </ul>
+    </div>
+
+    <section class="phone" aria-labelledby="phone-title">
+      <h2 id="phone-title" class="small">Messages</h2>
+      <ol id="thread" class="thread" role="log" aria-live="polite" aria-label="SMS conversation"></ol>
+      <div class="quick" role="group" aria-label="Quick commands">
+        <button type="button" class="chip" data-cmd="HELP">HELP</button>
+        <button type="button" class="chip" data-cmd="ASK which skills do employers ask for">ASK …</button>
+        <button type="button" class="chip" data-cmd="JOBS driver adama">JOBS driver adama</button>
+        <button type="button" class="chip" data-cmd="ALERT driver adama">ALERT driver adama</button>
+        <button type="button" class="chip" data-cmd="YES">YES</button>
+        <button type="button" class="chip" data-cmd="STOP">STOP</button>
+      </div>
+      <form id="send" novalidate>
+        <div class="field">
+          <label for="text">Message</label>
+          <input id="text" class="input" maxlength="480" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+        <div id="status" class="status-box" role="alert"></div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><div><p class="small">The mock gateway only keeps the last messages in memory. Nothing leaves the server.</p></div></div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var seen = {};
+  function bubble(text, cls, note) {
+    var li = document.createElement("li"); li.className = cls; li.setAttribute("dir", "auto");
+    var who = document.createElement("span"); who.className = "visually-hidden"; who.textContent = cls === "out" ? "You sent: " : "Reply: ";
+    li.appendChild(who); li.appendChild(document.createTextNode(text));
+    if (note) { var n = document.createElement("div"); n.className = "small"; n.textContent = note; li.appendChild(n); }
+    $("thread").appendChild(li); $("thread").scrollTop = $("thread").scrollHeight;
+  }
+  function key(m) { return m.at + "|" + m.text; }
+  function pollOutbox(initial) {
+    var from = $("from").value.trim();
+    if (!WWM.phoneOk(from)) return;
+    WWM.api("/v1/sms/outbox?to=" + encodeURIComponent(from)).then(function (d) {
+      d.items.forEach(function (m) {
+        if (seen[key(m)]) return;
+        seen[key(m)] = true;
+        if (!initial) bubble(m.text, "in", m.segments > 1 ? m.segments + " SMS parts" : "");
+      });
+    }, function () {});
+  }
+  function send(text) {
+    var from = $("from").value.trim();
+    var ok = WWM.validate($("send"), { text: function (v) { return v || text ? null : "Type a message first."; } });
+    if (!WWM.phoneOk(from)) { WWM.setError($("from"), "That phone number is not in a format we know. " + WWM.phoneFix); $("from").focus(); return; }
+    WWM.setError($("from"), null);
+    if (!ok) return;
+    bubble(text, "out");
+    WWM.api("/v1/sms/inbound", { method: "POST", body: { from: from, text: text } }).then(function () {
+      $("status").textContent = "";
+      pollOutbox(false);
+    }, function (err) { WWM.showError($("status"), err); });
+  }
+  $("send").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var t = $("text").value.trim();
+    if (!t) { WWM.validate($("send"), { text: function () { return "Type a message first."; } }); return; }
+    send(t); $("text").value = "";
+  });
+  document.querySelectorAll("[data-cmd]").forEach(function (b) {
+    b.addEventListener("click", function () { send(b.getAttribute("data-cmd")); });
+  });
+  $("from").addEventListener("change", function () { seen = {}; $("thread").innerHTML = ""; pollOutbox(true); });
+  pollOutbox(true);
+  setInterval(function () { pollOutbox(false); }, 4000);
+})();
+</script>
+<!-- data-api="" means the API is on the same origin as this page. -->
+<script src="/widget/walk-with-me.js" data-api="" data-lang="en" defer></script>
+</body>
+</html>

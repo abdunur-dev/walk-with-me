@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff console · Walk With Me</title>
+<meta name="description" content="Staff console for Walk With Me help requests.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#352E72">
+<link rel="canonical" href="/site/staff.html">
+<meta property="og:title" content="Staff console · Walk With Me">
+<meta property="og:description" content="Answer learners who asked for a person.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/site/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8F135'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23352E72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/site/tokens.css">
+<link rel="stylesheet" href="/site/base.css">
+<style>
+  .console { display: grid; gap: var(--space-5); padding-block: var(--space-6); }
+  @media (min-width: 900px) { .console { grid-template-columns: 340px 1fr; align-items: start; } }
+  .queue { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+  .queue li { max-inline-size: none; }
+  .req { display: block; width: 100%; text-align: start; font: inherit; color: var(--text); background: var(--bg); border: var(--border); border-radius: var(--radius-card); padding: var(--space-4); cursor: pointer; box-shadow: var(--edge); }
+  .req[aria-current="true"] { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .req.waiting-long { border-width: 5px; }
+  .req strong { display: block; }
+  .chat-log { list-style: none; margin: 0 0 var(--space-4); padding: var(--space-4); border: var(--border); border-radius: var(--radius-card); max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-2); }
+  .chat-log li { max-width: 85%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-control); }
+  .msg-learner { align-self: flex-start; background: var(--bg); border: var(--border); }
+  .msg-staff { align-self: flex-end; background: var(--card-dark); color: var(--card-dark-text); }
+  .msg-system { align-self: center; background: var(--section-bg); font-size: var(--text-sm); }
+  .snapshot iframe { width: 100%; height: 420px; border: var(--border); border-radius: var(--radius-control); background: var(--white); }
+  @media (max-width: 899px) { .console.has-detail .queue-pane { display: none; } .console:not(.has-detail) .detail-pane { display: none; } }
+</style>
+<script src="/site/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/site/index.html"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#C8F135"/><path d="M9 16h14M16 9v14" stroke="#352E72" stroke-width="4" stroke-linecap="round"/></svg>Walk With Me</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/site/staff.html" aria-current="page">Staff console</a></li>
+        <li><a href="/site/teacher.html">Teacher view</a></li>
+        <li><a href="/site/docs.html">Docs</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="display-options" data-display-options></div>
+</header>
+
+<main id="main" class="wrap" style="padding-block: var(--space-6)">
+  <h1>Staff console</h1>
+
+  <form id="login" class="card" novalidate style="max-width: 36rem">
+    <div class="field">
+      <label for="token">Staff token</label>
+      <span class="hint" id="token-hint">You can paste it. It stays in this browser tab only.</span>
+      <input id="token" class="input" type="password" autocomplete="off" aria-describedby="token-hint">
+    </div>
+    <button type="submit" class="btn btn-primary">Open the console</button>
+    <div id="login-status" class="status-box" role="alert"></div>
+  </form>
+
+  <div id="console" class="console" hidden>
+    <section class="queue-pane" aria-labelledby="queue-title">
+      <h2 id="queue-title">Requests</h2>
+      <p id="queue-status" role="status" aria-live="polite" class="small"></p>
+      <ul id="queue" class="queue"></ul>
+      <p class="small"><button type="button" id="logout" class="btn btn-quiet btn-small">Sign out of this tab</button></p>
+    </section>
+
+    <section class="detail-pane" aria-labelledby="detail-title">
+      <div id="no-detail" class="card"><h2 id="detail-title" tabindex="-1">Pick a request</h2><p>Open requests are listed oldest first.</p></div>
+      <div id="detail" hidden>
+        <button type="button" class="btn btn-quiet btn-small" id="back-to-list">Back to requests</button>
+        <h2 id="d-title" tabindex="-1">Request</h2>
+        <p id="d-status" role="status" aria-live="polite"></p>
+        <div class="card" style="margin-bottom: var(--space-5)">
+          <h3>Place message the learner approved</h3>
+<pre id="d-place" tabindex="0" aria-label="Place message"></pre>
+          <p id="d-note" hidden></p>
+          <p id="d-phone" hidden></p>
+        </div>
+        <div class="row" style="margin-bottom: var(--space-5)">
+          <button type="button" class="btn btn-primary" id="claim">Claim</button>
+          <button type="button" class="btn btn-secondary" id="ask-share">Ask to see their screen</button>
+        </div>
+        <h3 id="chat-title">Chat</h3>
+        <ol id="chat" class="chat-log" role="log" aria-live="polite" aria-labelledby="chat-title"></ol>
+        <form id="send-form" novalidate>
+          <div class="field">
+            <label for="msg">Message to the learner</label>
+            <textarea id="msg" class="input" rows="3" style="min-height: 6rem" maxlength="2000"></textarea>
+          </div>
+          <button type="submit" class="btn btn-secondary">Send</button>
+          <div id="send-status" class="status-box" role="alert"></div>
+        </form>
+        <div class="snapshot" id="snap-wrap" hidden>
+          <h3>Their page view</h3>
+          <p id="snap-time" class="small"></p>
+          <iframe id="snap" sandbox="" title="Read-only snapshot of the learner's page. Inputs are hidden."></iframe>
+        </div>
+        <form id="resolve-form" class="card" novalidate style="margin-top: var(--space-5)">
+          <div class="field">
+            <label for="note">Note for the team (optional, one line, no personal details)</label>
+            <input id="note" class="input" maxlength="140">
+          </div>
+          <button type="submit" class="btn btn-secondary">Resolve</button>
+          <div id="resolve-status" class="status-box" role="alert"></div>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><div><p class="small">Staff never get control of a learner's device. Call-back numbers are deleted when a request is resolved.</p></div></div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var token = null, current = null, lastMsgId = 0, ws = null, pollTimer = null, detailTimer = null;
+  try { token = sessionStorage.getItem("wwm.staffToken"); } catch (e) {}
+
+  function auth() { return { headers: { Authorization: "Bearer " + token } }; }
+  function call(path, opts) {
+    opts = opts || {}; opts.headers = Object.assign({}, opts.headers || {}, { Authorization: "Bearer " + token });
+    return WWM.api(path, opts);
+  }
+
+  function start() {
+    call("/v1/staff/me").then(function (me) {
+      $("login").hidden = true; $("console").hidden = false;
+      $("queue-status").textContent = "Signed in as " + me.display_name + ".";
+      loadQueue();
+      pollTimer = setInterval(loadQueue, 5000);
+      if (location.hash.length > 1) openRequest(decodeURIComponent(location.hash.slice(1)));
+    }, function (err) {
+      token = null; try { sessionStorage.removeItem("wwm.staffToken"); } catch (e) {}
+      $("login").hidden = false; $("console").hidden = true;
+      WWM.showError($("login-status"), err);
+    });
+  }
+
+  $("login").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var rules = { token: function (v) { return v ? null : "Enter the staff token."; } };
+    if (!WWM.validate($("login"), rules)) return;
+    token = $("token").value.trim();
+    try { sessionStorage.setItem("wwm.staffToken", token); } catch (err) {}
+    $("login-status").textContent = "";
+    start();
+  });
+  $("logout").addEventListener("click", function () {
+    try { sessionStorage.removeItem("wwm.staffToken"); } catch (e) {}
+    location.reload();
+  });
+
+  function waitText(s) {
+    if (s < 60) return "Waiting under 1 min";
+    return "Waiting " + Math.floor(s / 60) + " min";
+  }
+  var prefLabel = { chat: "Chat", voice_callback: "Voice call-back", phone_callback: "Phone call-back" };
+
+  function loadQueue() {
+    call("/v1/staff/handoffs").then(function (data) {
+      var ul = $("queue"); ul.innerHTML = "";
+      if (!data.items.length) { var li = document.createElement("li"); li.textContent = "No open requests."; ul.appendChild(li); }
+      data.items.forEach(function (r) {
+        var li = document.createElement("li");
+        var b = document.createElement("button"); b.type = "button"; b.className = "req";
+        if (r.status === "open" && r.waiting_seconds >= 180) b.classList.add("waiting-long");
+        if (current === r.id) b.setAttribute("aria-current", "true");
+        var t = document.createElement("strong"); t.textContent = (r.page_title || "Unknown page") + (r.section ? ": " + r.section : "");
+        b.appendChild(t);
+        var meta = r.status === "open" ? waitText(r.waiting_seconds) : (r.mine ? "Claimed by you" : "Claimed");
+        b.appendChild(document.createTextNode(meta + " · " + (prefLabel[r.contact_pref] || r.contact_pref) + " · " + (r.lang === "am" ? "Amharic" : "English")));
+        b.addEventListener("click", function () { openRequest(r.id); });
+        li.appendChild(b); ul.appendChild(li);
+      });
+    }, function (err) { WWM.showError($("queue-status"), err); });
+  }
+
+  function addMsg(m) {
+    if (m.id && m.id <= lastMsgId) return;
+    if (m.id) lastMsgId = m.id;
+    var li = document.createElement("li");
+    li.className = "msg-" + m.sender;
+    li.setAttribute("dir", "auto");
+    var who = m.sender === "learner" ? "Learner: " : m.sender === "staff" ? "You: " : "";
+    li.textContent = who + m.text;
+    $("chat").appendChild(li);
+    $("chat").scrollTop = $("chat").scrollHeight;
+  }
+
+  function renderDetail(d, first) {
+    $("d-title").textContent = (d.place.page_title || "Request") + (d.place.section ? ": " + d.place.section : "");
+    var statusText = d.status === "open" ? "Waiting for someone to claim it." : d.status === "claimed" ? (d.claimed_by_me ? "You are helping." : "Someone else is helping.") : "This request is " + d.status + ".";
+    if ($("d-status").textContent !== statusText) $("d-status").textContent = statusText;
+    $("d-place").textContent = d.place_text;
+    $("d-note").hidden = !d.place.note; $("d-note").textContent = d.place.note ? "Learner added: " + d.place.note : "";
+    $("d-phone").hidden = !d.callback_phone;
+    $("d-phone").textContent = d.callback_phone ? (prefLabel[d.contact_pref] + " number: " + d.callback_phone + ". Deleted when you resolve.") : "";
+    $("claim").hidden = d.status !== "open";
+    var closed = d.status === "resolved" || d.status === "abandoned";
+    $("ask-share").hidden = closed; $("send-form").hidden = closed; $("resolve-form").hidden = closed;
+    d.messages.forEach(addMsg);
+    if (d.snapshot) {
+      $("snap-wrap").hidden = false;
+      if ($("snap").getAttribute("data-at") !== d.snapshot.at) {
+        $("snap").setAttribute("data-at", d.snapshot.at);
+        $("snap").srcdoc = d.snapshot.html;
+        $("snap-time").textContent = "Sent at " + d.snapshot.at + " UTC" + (d.snapshot.title ? " from " + d.snapshot.title : "") + ". The learner sends a new one when they press Update view.";
+      }
+    } else { $("snap-wrap").hidden = true; }
+    if (first) $("d-title").focus();
+  }
+
+  function refreshDetail(first) {
+    if (!current) return;
+    var id = current;
+    call("/v1/staff/handoffs/" + encodeURIComponent(id) + "?after=" + lastMsgId).then(function (d) { if (id === current) renderDetail(d, first); },
+      function (err) { WWM.showError($("d-status"), err); });
+  }
+
+  function openRequest(id) {
+    current = id; lastMsgId = 0; $("chat").innerHTML = "";
+    $("snap").removeAttribute("data-at");
+    history.replaceState(null, "", "#" + encodeURIComponent(id));
+    $("no-detail").hidden = true; $("detail").hidden = false;
+    $("console").classList.add("has-detail");
+    refreshDetail(true);
+    loadQueue();
+    connect(id);
+  }
+
+  function connect(id) {
+    if (ws) { try { ws.close(); } catch (e) {} ws = null; }
+    if (detailTimer) clearInterval(detailTimer);
+    detailTimer = setInterval(function () { refreshDetail(false); }, 5000); /* polling fallback, always on but cheap */
+    if (!("WebSocket" in window)) return;
+    var proto = location.protocol === "https:" ? "wss:" : "ws:";
+    try {
+      ws = new WebSocket(proto + "//" + location.host + "/v1/handoff/" + encodeURIComponent(id) + "/ws?token=" + encodeURIComponent(token));
+    } catch (e) { return; }
+    ws.onmessage = function (ev) {
+      var m; try { m = JSON.parse(ev.data); } catch (e) { return; }
+      if (id !== current) return;
+      if (m.type === "message") addMsg(m.message);
+      else if (m.type === "status" || m.type === "snapshot" || m.type === "share") {
+        refreshDetail(false);
+        if (m.type === "share" && m.action === "stopped") WWM.announce("The learner stopped sharing.");
+        if (m.type === "share" && m.action === "declined") WWM.announce("The learner chose not to share.");
+        if (m.type === "snapshot") WWM.announce("New page view from the learner.");
+      } else if (m.type === "typing") { WWM.announce("The learner is typing."); }
+    };
+  }
+
+  $("back-to-list").addEventListener("click", function () {
+    $("console").classList.remove("has-detail");
+    $("detail").hidden = true; $("no-detail").hidden = false; current = null;
+    history.replaceState(null, "", location.pathname);
+    $("queue-title").setAttribute("tabindex", "-1"); $("queue-title").focus();
+  });
+
+  $("claim").addEventListener("click", function () {
+    call("/v1/staff/handoffs/" + encodeURIComponent(current) + "/claim", { method: "POST" }).then(function () {
+      refreshDetail(false); loadQueue(); $("msg").focus();
+    }, function (err) { WWM.showError($("d-status"), err); });
+  });
+  $("ask-share").addEventListener("click", function () {
+    call("/v1/staff/handoffs/" + encodeURIComponent(current) + "/request-share", { method: "POST" }).then(function () {
+      $("d-status").textContent = "Asked. The learner chooses whether to share.";
+    }, function (err) { WWM.showError($("d-status"), err); });
+  });
+  $("send-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!WWM.validate($("send-form"), { msg: function (v) { return v ? null : "Type a message first."; } })) return;
+    var text = $("msg").value.trim();
+    call("/v1/staff/handoffs/" + encodeURIComponent(current) + "/messages", { method: "POST", body: { text: text } }).then(function (m) {
+      addMsg(m); $("msg").value = ""; $("send-status").textContent = ""; $("msg").focus();
+    }, function (err) { WWM.showError($("send-status"), err); });
+  });
+  $("resolve-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var note = $("note").value.trim();
+    call("/v1/staff/handoffs/" + encodeURIComponent(current) + "/resolve", { method: "POST", body: { note: note || null } }).then(function () {
+      $("resolve-status").textContent = ""; refreshDetail(false); loadQueue(); WWM.announce("Request resolved.");
+    }, function (err) { WWM.showError($("resolve-status"), err); });
+  });
+
+  if (token) start();
+})();
+</script>
+<!-- data-api="" means the API is on the same origin as this page. -->
+<script src="/widget/walk-with-me.js" data-api="" data-lang="en" defer></script>
+</body>
+</html>

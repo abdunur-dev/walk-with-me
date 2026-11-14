@@ -1,0 +1,27 @@
+# docker compose up                       -> works with AI_PROVIDER=offline and nothing else
+# docker compose --profile local-ai up    -> also starts Ollama for AI_PROVIDER=local
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AI_PROVIDER: ${AI_PROVIDER:-offline}
+    volumes:
+      - ./data:/app/data:ro          # edit course/faq/jobs JSON without rebuilding; restart to reload
+      - wwm-db:/app/var              # SQLite file
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest   # pin a version you have tested
+    profiles: ["local-ai"]
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  wwm-db:
+  ollama:

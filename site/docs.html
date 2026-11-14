@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install docs · Walk With Me</title>
+<meta name="description" content="Install Walk With Me with one script tag, use the REST API, publish jobs as schema.org data, set up Telegram and SMS, and choose the AI provider.">
+<meta name="theme-color" content="#352E72">
+<link rel="canonical" href="/site/docs.html">
+<meta property="og:title" content="Install docs · Walk With Me">
+<meta property="og:description" content="One script tag, a REST API and open job data.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/site/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8F135'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23352E72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/site/tokens.css">
+<link rel="stylesheet" href="/site/base.css">
+<style>
+  .docs { display: grid; gap: var(--space-6); padding-block: var(--space-7); }
+  .docs section { padding-block-end: var(--space-6); border-bottom: 2px solid var(--border-color); margin-block-end: var(--space-6); }
+  .toc ol { padding-inline-start: var(--space-5); margin: 0; }
+  .toc a { display: inline-block; padding-block: var(--space-2); }
+  .toc summary { font-weight: 700; min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+  @media (min-width: 960px) {
+    .docs { grid-template-columns: 260px 1fr; align-items: start; }
+    .toc { position: sticky; top: var(--space-5); }
+  }
+</style>
+<script src="/site/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/site/index.html"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#C8F135"/><path d="M9 16h14M16 9v14" stroke="#352E72" stroke-width="4" stroke-linecap="round"/></svg>Walk With Me</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/savanna/pages/concept-with-navigation.html">Try it</a></li>
+        <li><a href="/site/index.html#install">Install</a></li>
+        <li><a href="/site/jobs.html">Jobs</a></li>
+        <li><a href="/site/docs.html" aria-current="page">Docs</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="display-options" data-display-options></div>
+</header>
+
+<main id="main" class="wrap docs">
+  <nav class="toc" aria-label="On this page">
+    <details id="toc-details" open>
+      <summary>On this page</summary>
+      <ol>
+        <li><a href="#level1">Install in one line</a></li>
+        <li><a href="#level2">REST API</a></li>
+        <li><a href="#level3">Jobs as schema.org data</a></li>
+        <li><a href="#channels">Telegram and SMS</a></li>
+        <li><a href="#ai">Choosing the AI provider</a></li>
+        <li><a href="#docker">Run with Docker Compose</a></li>
+        <li><a href="#privacy">Privacy and deletion</a></li>
+        <li><a href="#a11y">Accessibility statement</a></li>
+      </ol>
+    </details>
+  </nav>
+
+  <div>
+    <h1>Install docs</h1>
+    <p>Everything a platform owner needs to add Walk With Me to a site and keep it running.</p>
+
+    <section id="level1" aria-labelledby="h-level1">
+      <h2 id="h-level1">Install in one line (Level 1)</h2>
+      <p>Add this before the closing body tag on every page. The helper appears in the same corner on every page.</p>
+      <div class="code-block">
+<pre id="code-l1" tabindex="0" aria-label="Script tag">&lt;script src="https://YOUR-HOST/widget/walk-with-me.js"
+        data-api="https://YOUR-HOST"
+        data-lang="am"
+        data-mode="normal"
+        defer&gt;&lt;/script&gt;</pre>
+        <button type="button" class="btn btn-secondary btn-small" data-copy="#code-l1">Copy</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Script tag attributes</caption>
+          <thead><tr><th scope="col">Attribute</th><th scope="col">Values</th><th scope="col">What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>data-api</code></td><td>URL, or empty</td><td>Where the API runs. Empty means the same site as the page.</td></tr>
+            <tr><td><code>data-lang</code></td><td><code>en</code>, <code>am</code></td><td>Starting language. The learner can switch it.</td></tr>
+            <tr><td><code>data-mode</code></td><td><code>normal</code>, <code>simple</code></td><td>Simple mode: short sentences, one step at a time, read aloud.</td></tr>
+            <tr><td><code>data-offline-only</code></td><td><code>true</code></td><td>Never call the API. Answers come from the built-in course questions only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The helper works on pages opened from a file, because the offline answers are a script file, not a data request.</p>
+    </section>
+
+    <section id="level2" aria-labelledby="h-level2">
+      <h2 id="h-level2">REST API (Level 2)</h2>
+      <p>Every feature has an endpoint. Read the interactive reference at <a href="/docs">/docs</a> or download the <a href="/openapi.json">OpenAPI document</a>.</p>
+      <p>Ask a question:</p>
+      <div class="code-block">
+<pre id="code-chat" tabindex="0" aria-label="Chat example">curl -X POST https://YOUR-HOST/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Which skills do employers ask for?", "lang": "en", "mode": "normal"}'</pre>
+        <button type="button" class="btn btn-secondary btn-small" data-copy="#code-chat">Copy</button>
+      </div>
+      <p>The answer comes with <code>citations</code> (section title and link), <code>provider</code> and <code>answered_offline</code>. If nothing in the course matches, <code>not_in_course</code> is true and <code>handoff_suggested</code> offers a person.</p>
+      <p>List jobs with a support filter:</p>
+      <div class="code-block">
+<pre id="code-jobs" tabindex="0" aria-label="Jobs example">curl "https://YOUR-HOST/v1/jobs?city=Adama&amp;supports=sign_language_interpreter"</pre>
+        <button type="button" class="btn btn-secondary btn-small" data-copy="#code-jobs">Copy</button>
+      </div>
+      <p>Errors always look like this, so you can show them to people as they are:</p>
+<pre tabindex="0" aria-label="Error shape">{"error": {"code": "invalid_phone", "message": "That phone number is not in a format we can text.",
+           "fix": "Use a number like 0911 234567, 0711 234567 or +251 911 234567."}}</pre>
+    </section>
+
+    <section id="level3" aria-labelledby="h-level3">
+      <h2 id="h-level3">Jobs as schema.org data (Level 3)</h2>
+      <p>Add <code>format=jsonld</code> to get the job list as <code>schema.org/JobPosting</code> objects. Job boards and search engines can read them. Supports offered are listed in <code>jobBenefits</code>.</p>
+      <div class="code-block">
+<pre id="code-ld" tabindex="0" aria-label="JSON-LD example">curl "https://YOUR-HOST/v1/jobs?format=jsonld"</pre>
+        <button type="button" class="btn btn-secondary btn-small" data-copy="#code-ld">Copy</button>
+      </div>
+    </section>
+
+    <section id="channels" aria-labelledby="h-channels">
+      <h2 id="h-channels">Telegram and SMS</h2>
+      <h3>Telegram</h3>
+      <ol>
+        <li>Create a bot with BotFather and copy its token.</li>
+        <li>Set <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_BOT_USERNAME</code>.</li>
+        <li>For staff notices, add the bot to a staff group and set <code>TELEGRAM_STAFF_CHAT_ID</code>. Staff answer a learner by replying to the bot's message.</li>
+        <li>On a laptop the bot uses long polling. On a server set <code>TELEGRAM_MODE=webhook</code> and <code>PUBLIC_BASE_URL</code>; the webhook is <code>/v1/telegram/webhook</code>.</li>
+      </ol>
+      <p>Commands: <code>/start</code>, <code>/help</code>, <code>/jobs</code>, <code>/alerts</code>, <code>/accommodation</code>, <code>/stop</code>.</p>
+      <h3>SMS</h3>
+      <p>By default <code>SMS_GATEWAY=mock</code>: nothing is sent, and every message appears in the <a href="/site/sms-sim.html">SMS simulator</a>. To send real messages set <code>SMS_GATEWAY=africastalking</code> with <code>AFRICASTALKING_USERNAME</code>, <code>AFRICASTALKING_API_KEY</code> and, if you have one, <code>AFRICASTALKING_SENDER_ID</code>. Check first that your provider delivers to Ethio Telecom and Safaricom Ethiopia numbers.</p>
+      <p>Point the provider's inbound webhook at <code>POST /v1/sms/inbound</code>. Learners send <code>HELP</code>, <code>ASK</code> and a question, <code>JOBS driver adama</code>, <code>ALERT driver adama</code> or <code>STOP</code>.</p>
+    </section>
+
+    <section id="ai" aria-labelledby="h-ai">
+      <h2 id="h-ai">Choosing the AI provider</h2>
+      <p>Set <code>AI_PROVIDER</code>. Whatever you choose, the offline provider is the fallback: if the model fails, is slow (more than 6 seconds) or cites something that was not retrieved, the answer comes from the human-written course questions instead.</p>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">AI providers</caption>
+          <thead><tr><th scope="col">Value</th><th scope="col">Needs</th><th scope="col">Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>offline</code></td><td>Nothing</td><td>Returns the best matching human-written answer and its source. Always works.</td></tr>
+            <tr><td><code>claude</code></td><td><code>ANTHROPIC_API_KEY</code>, <code>ANTHROPIC_MODEL</code></td><td>Cloud model. Best for Amharic.</td></tr>
+            <tr><td><code>local</code></td><td><code>LOCAL_LLM_URL</code>, <code>LOCAL_LLM_MODEL</code></td><td>Any OpenAI-compatible server, such as Ollama. Small local models are weak in Amharic; use it for English.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Other settings: <code>MIN_SCORE</code> (how closely a question must match the course, default 0.35), <code>K_MIN</code> (how many times a question must be asked before the teacher view shows it, default 3), <code>STAFF_TOKEN</code> (staff console and teacher view), <code>PUBLIC_BASE_URL</code> (links in alerts).</p>
+    </section>
+
+    <section id="docker" aria-labelledby="h-docker">
+      <h2 id="h-docker">Run with Docker Compose</h2>
+      <div class="code-block">
+<pre id="code-docker" tabindex="0" aria-label="Docker commands">cp .env.example .env      # set STAFF_TOKEN at least
+docker compose up         # API, widget and pages on http://localhost:8000
+docker compose --profile local-ai up   # also starts Ollama</pre>
+        <button type="button" class="btn btn-secondary btn-small" data-copy="#code-docker">Copy</button>
+      </div>
+      <p>It works with only <code>AI_PROVIDER=offline</code>. Health check: <code>/healthz</code>.</p>
+    </section>
+
+    <section id="privacy" aria-labelledby="h-privacy">
+      <h2 id="h-privacy">Privacy and deletion</h2>
+      <ul>
+        <li>Learners have no accounts. A random session id is kept on their device.</li>
+        <li>Chat text is deleted 7 days after the session starts.</li>
+        <li>A call-back phone number is deleted when the help request ends.</li>
+        <li>Alert subscriptions last until the learner stops them (<code>STOP</code>, <code>/stop</code> or the jobs page).</li>
+        <li>Interview support messages are drafted and returned. They are never stored.</li>
+        <li>The teacher view shows questions only, with no session ids, and only after <code>K_MIN</code> learners asked them.</li>
+      </ul>
+      <p>A learner can delete their session data with <code>DELETE /v1/me?session_id=…</code>. The helper panel offers this too.</p>
+    </section>
+
+    <section id="a11y" aria-labelledby="h-a11y">
+      <h2 id="h-a11y">Accessibility statement</h2>
+      <p>We aim for WCAG 2.2 level AA on the helper, these pages, the staff console and the teacher view.</p>
+      <p>Testing with screen readers (NVDA and TalkBack), keyboard only, 200% zoom and sound off is still in progress. Results, including what does not work yet, are in <code>docs/conformance-report.md</code> in the code repository. We do not claim conformance until that report is filled in with real results.</p>
+      <p>If something does not work for you, press Talk to a person in the helper, or tell the hackathon organisers.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div><p class="small">Walk With Me. Licence: to be confirmed with ALX before release.</p></div>
+    <div><p class="small"><a href="#privacy">Privacy and deletion</a></p></div>
+  </div>
+</footer>
+
+<div class="cta-bar"><a class="btn btn-primary" href="/savanna/pages/concept-with-navigation.html">Try it on Savanna</a></div>
+
+<script>
+  /* Table of contents collapses on phones */
+  (function () {
+    var d = document.getElementById("toc-details");
+    function set() { if (window.matchMedia("(max-width: 959px)").matches) d.removeAttribute("open"); else d.setAttribute("open", ""); }
+    set();
+  })();
+</script>
+<!-- data-api="" means the API is on the same origin as this page. -->
+<script src="/widget/walk-with-me.js" data-api="" data-lang="en" defer></script>
+</body>
+</html>

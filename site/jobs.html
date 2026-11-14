@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs · Walk With Me</title>
+<meta name="description" content="Find jobs that offer the support you need. Get alerts by Telegram or SMS. Ask for interview support.">
+<meta name="theme-color" content="#352E72">
+<link rel="canonical" href="/site/jobs.html">
+<meta property="og:title" content="Jobs · Walk With Me">
+<meta property="og:description" content="Find jobs that offer the support you need. Tell no one why.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/site/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8F135'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23352E72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/site/tokens.css">
+<link rel="stylesheet" href="/site/base.css">
+<style>
+  .filters { display: grid; gap: var(--space-4); align-items: end; padding: var(--space-5); }
+  @media (min-width: 900px) { .filters { grid-template-columns: 1fr 1fr 1.4fr auto; } }
+  .filters .field { margin: 0; }
+  .filters details { border: 2px solid var(--border-color); border-radius: var(--radius-control); background: var(--input-bg); }
+  .filters summary { min-height: 52px; display: flex; align-items: center; padding: 0 var(--space-3); cursor: pointer; font-weight: 700; }
+  .filters details .checks { padding: 0 var(--space-3) var(--space-3); }
+  .job-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-5); }
+  .job-list li { max-inline-size: none; }
+  .job-card h3 { margin-block-end: var(--space-2); }
+  .job-meta { margin: 0 0 var(--space-3); }
+  .alerts-card { margin-block: var(--space-6); }
+  .alerts-card .input { background: var(--white); color: var(--indigo); }
+  .alerts-card .field > label, .alerts-card legend, .alerts-card .hint { color: var(--card-dark-text); }
+  .alerts-card .status-box { border-color: var(--card-dark-text); }
+  .step-label { font-size: var(--text-sm); margin: 0 0 var(--space-2); }
+</style>
+<script src="/site/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/site/index.html"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#C8F135"/><path d="M9 16h14M16 9v14" stroke="#352E72" stroke-width="4" stroke-linecap="round"/></svg>Walk With Me</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/savanna/pages/concept-with-navigation.html">Try it</a></li>
+        <li><a href="/site/index.html#install">Install</a></li>
+        <li><a href="/site/jobs.html" aria-current="page">Jobs</a></li>
+        <li><a href="/site/docs.html">Docs</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="display-options" data-display-options></div>
+</header>
+
+<main id="main" class="wrap" style="padding-block: var(--space-7)">
+  <h1>Jobs</h1>
+  <p>Find jobs that offer the support you need. You never have to say why. These are sample jobs for the demo.</p>
+
+  <form id="filters" class="card filters" aria-label="Filter jobs" onsubmit="return false">
+    <div class="field">
+      <label for="f-category">Job type</label>
+      <select id="f-category" class="input"><option value="">Any job type</option></select>
+    </div>
+    <div class="field">
+      <label for="f-city">City</label>
+      <select id="f-city" class="input"><option value="">Any city</option></select>
+    </div>
+    <div class="field">
+      <details id="f-supports-details">
+        <summary id="f-supports-summary">Support I need</summary>
+        <fieldset class="checks" aria-labelledby="f-supports-summary" id="f-supports" style="margin:0"></fieldset>
+      </details>
+    </div>
+    <button type="button" id="clear" class="btn btn-quiet">Clear filters</button>
+  </form>
+
+  <p id="showing" role="status" aria-live="polite"></p>
+
+  <section class="card-dark alerts-card on-dark" aria-labelledby="alerts-title">
+    <h2 id="alerts-title">Get alerts when a new job matches</h2>
+    <p>By Telegram or SMS. Every alert tells you how to stop.</p>
+    <button type="button" class="btn btn-secondary" id="open-alerts" aria-expanded="false" aria-controls="alerts-form">Get alerts</button>
+    <form id="alerts-form" hidden novalidate>
+      <div class="field" style="margin-top: var(--space-5)">
+        <label for="a-category">Job type</label>
+        <select id="a-category" class="input"><option value="any">Any job type</option></select>
+      </div>
+      <div class="field">
+        <label for="a-city">City</label>
+        <select id="a-city" class="input"><option value="any">Any city</option></select>
+      </div>
+      <fieldset class="field" id="a-supports"><legend>Support I need (optional)</legend></fieldset>
+      <fieldset class="field">
+        <legend>How should we send alerts?</legend>
+        <label class="check"><input type="radio" name="a-channel" value="telegram" checked> Telegram</label>
+        <label class="check"><input type="radio" name="a-channel" value="sms"> SMS</label>
+      </fieldset>
+      <div class="field" id="a-phone-field" hidden>
+        <label for="a-phone">Phone number (required for SMS)</label>
+        <span class="hint" id="a-phone-hint">09… or 07… or +251…</span>
+        <input id="a-phone" class="input" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="a-phone-hint">
+      </div>
+      <p class="small">We keep your choice and your number or chat only until you stop alerts. We never label it.</p>
+      <button type="submit" class="btn btn-secondary">Start alerts</button>
+      <div id="a-status" class="status-box" role="status" aria-live="polite"></div>
+    </form>
+    <form id="confirm-form" hidden novalidate>
+      <div class="field">
+        <label for="c-code">Code from the SMS</label>
+        <span class="hint" id="c-code-hint">6 digits</span>
+        <input id="c-code" class="input" inputmode="numeric" autocomplete="one-time-code" aria-describedby="c-code-hint">
+      </div>
+      <button type="submit" class="btn btn-secondary">Confirm alerts</button>
+      <div id="c-status" class="status-box" role="status" aria-live="polite"></div>
+    </form>
+    <details style="margin-top: var(--space-5)">
+      <summary style="min-height:44px; display:flex; align-items:center; cursor:pointer">Stop alerts</summary>
+      <form id="stop-form" novalidate>
+        <div class="field">
+          <label for="s-phone">Phone number you get SMS alerts on</label>
+          <span class="hint" id="s-phone-hint">09… or 07… or +251…. On Telegram, send /stop to the bot instead.</span>
+          <input id="s-phone" class="input" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="s-phone-hint">
+        </div>
+        <button type="submit" class="btn btn-secondary">Stop my SMS alerts</button>
+        <div id="s-status" class="status-box" role="status" aria-live="polite"></div>
+      </form>
+    </details>
+  </section>
+
+  <section aria-labelledby="results-title">
+    <h2 id="results-title">Jobs</h2>
+    <div id="results-error" class="status-box" role="alert"></div>
+    <ul id="results" class="job-list"></ul>
+    <div id="empty" class="card" hidden>
+      <p>No jobs match. Remove one support to see more, or get an alert when one is posted.</p>
+      <div class="row">
+        <button type="button" class="btn btn-secondary" id="empty-clear">Clear filters</button>
+        <button type="button" class="btn btn-secondary" id="empty-alerts">Get alerts</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog id="acc" aria-labelledby="acc-h1">
+  <div class="dialog-body">
+    <div id="acc-step1">
+      <p class="step-label">Step 1 of 3</p>
+      <h2 id="acc-h1" tabindex="-1">What would help at the interview?</h2>
+      <p id="acc-job"></p>
+      <form id="acc-form1" novalidate>
+        <fieldset id="acc-adj">
+          <legend>Choose all that help. We do not ask why.</legend>
+          <label class="check"><input type="checkbox" value="sign_language_interpreter"> Sign language interpreter</label>
+          <label class="check"><input type="checkbox" value="step_free"> Step-free access</label>
+          <label class="check"><input type="checkbox" value="written_interview_questions"> Questions in writing beforehand</label>
+          <label class="check"><input type="checkbox" value="extra_time"> Extra time</label>
+          <label class="check"><input type="checkbox" value="screen_reader_test"> Screen-reader-friendly test</label>
+          <label class="check"><input type="checkbox" value="quiet_room"> Quiet room</label>
+          <label class="check"><input type="checkbox" value="large_print_materials"> Large print materials</label>
+        </fieldset>
+        <div class="field">
+          <label for="acc-other">Other (optional)</label>
+          <input id="acc-other" class="input" maxlength="300">
+        </div>
+        <div id="acc-err1" class="status-box" role="alert"></div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary">Write my message</button>
+          <button type="button" class="btn btn-quiet" data-close>Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="acc-step2" hidden>
+      <p class="step-label">Step 2 of 3</p>
+      <h2 id="acc-h2" tabindex="-1">Check your message</h2>
+      <p id="acc-am-note" hidden></p>
+      <div class="field">
+        <label for="acc-text">Your message. You can change any word.</label>
+        <textarea id="acc-text" class="input" rows="10"></textarea>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="acc-next">Next: choose how to send</button>
+        <button type="button" class="btn btn-quiet" id="acc-back">Back</button>
+      </div>
+    </div>
+
+    <div id="acc-step3" hidden>
+      <p class="step-label">Step 3 of 3</p>
+      <h2 id="acc-h3" tabindex="-1">Send it</h2>
+      <p id="acc-to"></p>
+      <div class="row">
+        <button type="button" class="btn btn-secondary" id="acc-copy">Copy</button>
+        <a class="btn btn-secondary" id="acc-mail" href="#">Email app</a>
+        <a class="btn btn-secondary" id="acc-sms" href="#">Text message app</a>
+        <a class="btn btn-secondary" id="acc-tg" href="#" target="_blank" rel="noopener">Telegram<span class="visually-hidden"> (opens in a new tab)</span></a>
+      </div>
+      <p>Your message is ready. Nothing was sent until you pressed one of those buttons.</p>
+      <div class="row">
+        <button type="button" class="btn btn-quiet" id="acc-back2">Back</button>
+        <button type="button" class="btn btn-quiet" data-close>Close</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div><p class="small">Sample jobs for the Walk With Me demo. They are not real vacancies.</p></div>
+    <div><p class="small"><a href="/site/docs.html#privacy">Privacy and deletion</a></p></div>
+  </div>
+</footer>
+
+<div class="cta-bar"><button type="button" class="btn btn-primary" id="cta-alerts">Get alerts</button></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var meta = { categories: [], cities: [], supports: [] };
+  var supportLabel = {};
+  var categoryLabel = {};
+
+  function opt(sel, value, label) { var o = document.createElement("option"); o.value = value; o.textContent = label; sel.appendChild(o); }
+  function check(container, name, value, label) {
+    var l = document.createElement("label"); l.className = "check";
+    var i = document.createElement("input"); i.type = "checkbox"; i.name = name; i.value = value;
+    l.appendChild(i); l.appendChild(document.createTextNode(" " + label)); container.appendChild(l);
+    return i;
+  }
+
+  function lowerFirst(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
+  function sentenceList(items) {
+    if (!items.length) return "";
+    if (items.length === 1) return items[0];
+    return items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
+  }
+
+  function selectedSupports() {
+    return Array.prototype.map.call(document.querySelectorAll('#f-supports input:checked'), function (i) { return i.value; });
+  }
+
+  function load() {
+    var p = new URLSearchParams();
+    if ($("f-category").value) p.set("category", $("f-category").value);
+    if ($("f-city").value) p.set("city", $("f-city").value);
+    var sup = selectedSupports();
+    if (sup.length) p.set("supports", sup.join(","));
+    $("results-error").textContent = "";
+    WWM.api("/v1/jobs?" + p.toString()).then(function (data) {
+      render(data.items);
+      var parts = [data.count === 1 ? "Showing 1 job" : "Showing " + data.count + " jobs"];
+      if (sup.length) parts.push("that offer: " + sentenceList(sup.map(function (s) { return lowerFirst(supportLabel[s] || s); })));
+      $("showing").textContent = parts.join(" ") + ".";
+      $("f-supports-summary").textContent = sup.length ? "Support I need (" + sup.length + " chosen)" : "Support I need";
+    }, function (err) { WWM.showError($("results-error"), err); });
+  }
+
+  function render(items) {
+    var ul = $("results"); ul.innerHTML = "";
+    $("empty").hidden = items.length > 0;
+    items.forEach(function (j) {
+      var li = document.createElement("li");
+      var art = document.createElement("article"); art.className = "card job-card"; art.setAttribute("aria-labelledby", "job-" + j.id);
+      var h = document.createElement("h3"); h.id = "job-" + j.id; h.textContent = j.title; art.appendChild(h);
+      var m = document.createElement("p"); m.className = "job-meta";
+      m.appendChild(document.createTextNode(j.employer + " · " + j.city + " "));
+      var b = document.createElement("span"); b.className = "badge"; b.textContent = "Sample job"; m.appendChild(b);
+      art.appendChild(m);
+      var s = document.createElement("p"); s.textContent = j.summary_simple; art.appendChild(s);
+      if (j.deadline) {
+        var d = document.createElement("p");
+        var g = new Date(j.deadline + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+        d.textContent = "Apply by " + g + (j.deadline_ethiopian ? " (Ethiopian calendar: " + j.deadline_ethiopian.label_en + ")" : "") + ".";
+        art.appendChild(d);
+      }
+      var sp = document.createElement("p");
+      sp.textContent = j.supports_labels.length ? "Support offered: " + sentenceList(j.supports_labels.map(lowerFirst)) + "." : "No support is listed for this job yet. You can still ask.";
+      art.appendChild(sp);
+      var row = document.createElement("div"); row.className = "row";
+      var a = document.createElement("a"); a.className = "btn btn-primary"; a.href = j.apply_url || "#"; a.target = "_blank"; a.rel = "noopener";
+      a.innerHTML = 'Apply<span class="visually-hidden"> for ' + escapeHtml(j.title) + " (opens in a new tab)</span>";
+      var ask = document.createElement("button"); ask.type = "button"; ask.className = "btn btn-secondary";
+      ask.innerHTML = 'Ask for support<span class="visually-hidden"> for ' + escapeHtml(j.title) + "</span>";
+      ask.addEventListener("click", function () { openAcc(j, ask); });
+      row.appendChild(a); row.appendChild(ask); art.appendChild(row);
+      li.appendChild(art); ul.appendChild(li);
+    });
+  }
+  function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+  function clearFilters() {
+    $("f-category").value = ""; $("f-city").value = "";
+    Array.prototype.forEach.call(document.querySelectorAll('#f-supports input'), function (i) { i.checked = false; });
+    load();
+    WWM.announce("Filters cleared.");
+  }
+
+  WWM.api("/v1/jobs/meta").then(function (m) {
+    meta = m;
+    m.categories.forEach(function (c) { categoryLabel[c.id] = c.label; opt($("f-category"), c.id, c.label); opt($("a-category"), c.id, c.label); });
+    m.cities.forEach(function (c) { opt($("f-city"), c, c); opt($("a-city"), c, c); });
+    m.supports.forEach(function (s) {
+      supportLabel[s.id] = s.label;
+      check($("f-supports"), "f-sup", s.id, s.label).addEventListener("change", load);
+      check($("a-supports"), "a-sup", s.id, s.label);
+    });
+    load();
+  }, function (err) { WWM.showError($("results-error"), err); });
+
+  $("f-category").addEventListener("change", load);
+  $("f-city").addEventListener("change", load);
+  $("clear").addEventListener("click", clearFilters);
+  $("empty-clear").addEventListener("click", clearFilters);
+
+  /* ───────── Alerts ───────── */
+  var pendingPhone = null;
+  function openAlerts() {
+    var f = $("alerts-form"); f.hidden = false;
+    $("open-alerts").setAttribute("aria-expanded", "true");
+    $("alerts-title").scrollIntoView({ block: "start" });
+    $("a-category").focus();
+  }
+  $("open-alerts").addEventListener("click", function () {
+    var open = $("open-alerts").getAttribute("aria-expanded") === "true";
+    if (open) { $("alerts-form").hidden = true; $("open-alerts").setAttribute("aria-expanded", "false"); } else openAlerts();
+  });
+  $("empty-alerts").addEventListener("click", openAlerts);
+  $("cta-alerts").addEventListener("click", openAlerts);
+  document.querySelectorAll('input[name="a-channel"]').forEach(function (r) {
+    r.addEventListener("change", function () { $("a-phone-field").hidden = channel() !== "sms"; });
+  });
+  function channel() { return document.querySelector('input[name="a-channel"]:checked').value; }
+
+  var alertRules = { "a-phone": function (v) {
+    if (channel() !== "sms") return null;
+    if (!v) return "Enter the phone number for SMS alerts.";
+    return WWM.phoneOk(v) ? null : "That phone number is not in a format we can text. " + WWM.phoneFix;
+  } };
+  WWM.bindBlur(alertRules);
+  $("alerts-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!WWM.validate($("alerts-form"), alertRules)) return;
+    var body = {
+      channel: channel(), category: $("a-category").value, city: $("a-city").value, lang: WWM.store.get("wwm.lang") === "am" ? "am" : "en",
+      supports_needed: Array.prototype.map.call(document.querySelectorAll('#a-supports input:checked'), function (i) { return i.value; })
+    };
+    if (body.channel === "sms") body.phone = $("a-phone").value.trim();
+    var st = $("a-status"); st.textContent = "Starting…";
+    WWM.api("/v1/alerts/subscribe", { method: "POST", body: body }).then(function (r) {
+      st.textContent = "";
+      var p = document.createElement("p"); p.textContent = r.message; st.appendChild(p);
+      if (r.channel === "telegram" && r.telegram_link) {
+        var a = document.createElement("a"); a.href = r.telegram_link; a.className = "btn btn-secondary"; a.target = "_blank"; a.rel = "noopener";
+        a.innerHTML = 'Open the Telegram bot<span class="visually-hidden"> (opens in a new tab)</span>';
+        st.appendChild(a);
+      }
+      if (r.channel === "sms") { pendingPhone = body.phone; $("confirm-form").hidden = false; $("c-code").focus(); }
+    }, function (err) { WWM.showError(st, err); });
+  });
+
+  var codeRules = { "c-code": function (v) { return /^\d{6}$/.test(v) ? null : "Type the 6 digits from the SMS."; } };
+  WWM.bindBlur(codeRules);
+  $("confirm-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!WWM.validate($("confirm-form"), codeRules)) return;
+    var st = $("c-status");
+    WWM.api("/v1/alerts/confirm", { method: "POST", body: { phone: pendingPhone, code: $("c-code").value.trim() } }).then(function (r) {
+      st.textContent = "Alerts are on: " + (categoryLabel[r.category] || "any job type") + " jobs in " + (r.city === "any" ? "any city" : r.city) + ". Reply STOP to any alert to end them.";
+    }, function (err) { WWM.showError(st, err); });
+  });
+
+  var stopRules = { "s-phone": function (v) {
+    if (!v) return "Enter the phone number you get alerts on.";
+    return WWM.phoneOk(v) ? null : "That phone number is not in a format we know. " + WWM.phoneFix;
+  } };
+  WWM.bindBlur(stopRules);
+  $("stop-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!WWM.validate($("stop-form"), stopRules)) return;
+    var st = $("s-status");
+    WWM.api("/v1/alerts/unsubscribe", { method: "POST", body: { channel: "sms", address: $("s-phone").value.trim() } }).then(function (r) {
+      st.textContent = r.stopped ? "Alerts stopped." : "There were no alerts for that number. Nothing to stop.";
+    }, function (err) { WWM.showError(st, err); });
+  });
+
+  /* ───────── Accommodation dialog ───────── */
+  var dlg = $("acc"), accJob = null, accOpener = null, draft = null;
+  function step(n) {
+    [1, 2, 3].forEach(function (i) { $("acc-step" + i).hidden = i !== n; });
+    $("acc-h" + n).focus();
+  }
+  function openAcc(job, opener) {
+    accJob = job; accOpener = opener; draft = null;
+    $("acc-job").textContent = "For the interview: " + job.title + ", " + job.employer + ".";
+    $("acc-err1").textContent = "";
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    step(1);
+  }
+  function closeAcc() {
+    if (dlg.open) { if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open"); }
+  }
+  dlg.addEventListener("close", function () { if (accOpener) accOpener.focus(); });
+  dlg.addEventListener("click", function (e) { if (e.target.hasAttribute("data-close")) closeAcc(); });
+
+  $("acc-form1").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var adj = Array.prototype.map.call(document.querySelectorAll('#acc-adj input:checked'), function (i) { return i.value; });
+    var other = $("acc-other").value.trim();
+    var err = $("acc-err1");
+    if (!adj.length && !other) { err.textContent = "Problem: choose at least one thing that would help, or write it in Other."; err.setAttribute("tabindex", "-1"); err.focus(); return; }
+    err.textContent = "";
+    var lang = WWM.store.get("wwm.lang") === "am" ? "am" : "en";
+    WWM.api("/v1/accommodation/draft", { method: "POST", body: { job_id: accJob.id, adjustments: adj, other: other || null, lang: lang } }).then(function (d) {
+      draft = d;
+      $("acc-text").value = (lang === "am" && d.text_am) ? d.text_am : d.text_en;
+      var note = $("acc-am-note");
+      if (lang === "am" && !d.text_am && d.am_note) { note.hidden = false; note.textContent = d.am_note; } else note.hidden = true;
+      step(2);
+    }, function (e2) { WWM.showError(err, e2); err.setAttribute("tabindex", "-1"); err.focus(); });
+  });
+  $("acc-back").addEventListener("click", function () { step(1); });
+  $("acc-back2").addEventListener("click", function () { step(2); });
+  $("acc-next").addEventListener("click", function () {
+    var text = $("acc-text").value;
+    var subject = draft ? draft.subject_en : "Interview arrangements";
+    var to = draft && draft.contact_hint && draft.contact_hint.indexOf("@") > 0 ? draft.contact_hint : "";
+    $("acc-to").textContent = draft && draft.contact_hint ? "The employer's contact: " + draft.contact_hint + "." : "This job has no contact listed. Copy the message and send it where you applied.";
+    $("acc-mail").href = "mailto:" + encodeURIComponent(to) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(text);
+    $("acc-sms").href = "sms:?body=" + encodeURIComponent(text);
+    $("acc-tg").href = "https://t.me/share/url?url=" + encodeURIComponent(" ") + "&text=" + encodeURIComponent(text);
+    step(3);
+  });
+  $("acc-copy").addEventListener("click", function () {
+    WWM.copyText($("acc-text").value).then(function () { WWM.announce("Message copied."); $("acc-copy").textContent = "Copied"; setTimeout(function () { $("acc-copy").textContent = "Copy"; }, 2000); },
+      function () { WWM.announce("Copy did not work. Go back and select the text."); });
+  });
+})();
+</script>
+<!-- data-api="" means the API is on the same origin as this page. -->
+<script src="/widget/walk-with-me.js" data-api="" data-lang="en" defer></script>
+</body>
+</html>

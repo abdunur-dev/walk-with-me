@@ -1,0 +1,206 @@
+{
+  "course_id": "VA-1",
+  "concept_id": "future-of-the-va-industry",
+  "concept_title": "The future of the virtual assistant industry",
+  "page_url": "/savanna/pages/concept-with-navigation.html",
+  "sections": [
+    {
+      "id": "va-1.future.s1",
+      "anchor": "wwm-s1",
+      "position": 1,
+      "title_en": "Introduction",
+      "body_en": "This lesson explains what the virtual assistant industry is, why it is growing, and which skills will matter most in the next five years. A virtual assistant, or VA, is a person who supports a business or a busy professional from a distance, usually over the internet. By the end of the lesson you should be able to describe the main types of VA work and name three skills you want to build.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "introduction",
+        "lesson",
+        "virtual",
+        "assistant",
+        "skills",
+        "explains",
+        "industry",
+        "growing"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s2",
+      "anchor": "wwm-s2",
+      "position": 2,
+      "title_en": "What a virtual assistant does",
+      "body_en": "Virtual assistants handle tasks that keep a business running. Common tasks are managing email inboxes, scheduling meetings in a calendar, entering data into spreadsheets, answering customer messages, booking travel, and preparing simple reports. Some VAs specialise. A social media VA plans and posts content. A bookkeeping VA records invoices and payments. A customer support VA answers questions by chat, email or phone.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "virtual",
+        "assistant",
+        "tasks",
+        "email",
+        "customer",
+        "assistants",
+        "handle",
+        "business"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s3",
+      "anchor": "wwm-s3",
+      "position": 3,
+      "title_en": "Why demand is growing",
+      "body_en": "Demand for virtual assistants is growing because more companies hire remote workers. Small businesses cannot always afford a full-time office employee, so they hire a VA for a few hours a week. Hiring remotely also lets companies find people in other time zones, so work can continue while the owner sleeps. Reliable internet and cheap video calls have made it possible for a VA in Addis Ababa or Hawassa to work for a client anywhere.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "demand",
+        "growing",
+        "companies",
+        "hire",
+        "work",
+        "virtual",
+        "assistants",
+        "because"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s4",
+      "anchor": "wwm-s4",
+      "position": 4,
+      "title_en": "Tools for remote work",
+      "body_en": "Most VA work uses a small set of tools: email, a shared calendar, a spreadsheet program, a document editor, a video call app, and a task board where work is tracked. Many clients also use a password manager to share logins safely. You do not need to know every tool. Learn the common ones well and show that you can learn a new tool quickly.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "work",
+        "tools",
+        "remote",
+        "tool",
+        "learn",
+        "small",
+        "set",
+        "email"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s5",
+      "anchor": "wwm-s5",
+      "position": 5,
+      "title_en": "Skills employers ask for",
+      "body_en": "Employers most often ask for clear written communication, good time management, attention to detail, and reliability. Being able to work without close supervision is important because your client is not in the same room. Soft skills matter as much as tool skills. Telling a client early that a deadline is at risk is a skill.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "skills",
+        "employers",
+        "ask",
+        "client",
+        "clear",
+        "written",
+        "communication",
+        "good"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s6",
+      "anchor": "wwm-s6",
+      "position": 6,
+      "title_en": "AI and automation",
+      "body_en": "AI tools can now draft emails, summarise documents and sort data. This changes VA work but does not remove it. Clients still need a person who checks the work, makes judgement calls, and keeps track of what matters to the business. VAs who learn to use AI tools carefully can finish routine tasks faster and spend more time on work that needs a person.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "work",
+        "automation",
+        "tools",
+        "person",
+        "now",
+        "draft",
+        "emails",
+        "summarise"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s7",
+      "anchor": "wwm-s7",
+      "position": 7,
+      "title_en": "Building your portfolio",
+      "body_en": "A portfolio is a small collection of examples that show what you can do. For a VA this can be a sample schedule, a cleaned spreadsheet, a well written email, or a short report. Remove any private client details before you share an example. Keep your portfolio short. Three strong examples are better than ten weak ones.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "portfolio",
+        "building",
+        "examples",
+        "short",
+        "small",
+        "collection",
+        "show",
+        "sample"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s8",
+      "anchor": "wwm-s8",
+      "position": 8,
+      "title_en": "Key points",
+      "body_en": "The VA industry is growing because companies hire remote workers. Communication, time management and reliability are the skills employers ask for most. AI changes VA work; people who check and decide are still needed. A short portfolio with three examples helps you get your first client.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "key",
+        "points",
+        "industry",
+        "growing",
+        "because",
+        "companies",
+        "hire",
+        "remote"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    },
+    {
+      "id": "va-1.future.s9",
+      "anchor": "wwm-s9",
+      "position": 9,
+      "title_en": "Finishing this lesson",
+      "body_en": "When you have read the lesson, press the Mark as complete button below. Your progress is saved and the next concept opens in the curriculum bar.",
+      "title_am": null,
+      "body_am": null,
+      "keywords_en": [
+        "lesson",
+        "finishing",
+        "have",
+        "read",
+        "mark",
+        "complete",
+        "button",
+        "progress"
+      ],
+      "keywords_am": [],
+      "term_pairs": [],
+      "verified_am": 0
+    }
+  ]
+}

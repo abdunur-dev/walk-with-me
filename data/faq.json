@@ -1,0 +1,156 @@
+[
+  {
+    "id": "faq.mark-complete",
+    "section_id": "va-1.future.s9",
+    "question_en": "How do I finish this lesson?",
+    "question_am": "ይህን ትምህርት እንዴት ልጨርስ?",
+    "answer_en": "Scroll to the end of the lesson and press Mark as complete. Your progress is saved.",
+    "answer_am": null,
+    "keywords_en": ["finish", "complete", "done", "mark", "end", "progress", "save", "lesson", "completed"],
+    "keywords_am": ["ልጨርስ", "ጨርስ", "ተጠናቋል"],
+    "action_id": "mark_complete"
+  },
+  {
+    "id": "faq.sidebar",
+    "section_id": null,
+    "question_en": "Where is the course outline or menu?",
+    "question_am": null,
+    "answer_en": "Press the Menu button at the top left. It opens the course outline with every section of this lesson.",
+    "answer_am": null,
+    "keywords_en": ["menu", "outline", "sidebar", "hamburger", "sections", "contents", "navigation"],
+    "keywords_am": [],
+    "action_id": "toggle_sidebar"
+  },
+  {
+    "id": "faq.courses",
+    "section_id": null,
+    "question_en": "How do I switch to another course?",
+    "question_am": null,
+    "answer_en": "Press My courses at the top of the page. A list of your courses opens. Choose one.",
+    "answer_am": null,
+    "keywords_en": ["courses", "course", "switch", "change", "another", "other", "list", "dropdown"],
+    "keywords_am": [],
+    "action_id": "open_courses_menu"
+  },
+  {
+    "id": "faq.programme",
+    "section_id": null,
+    "question_en": "Where can I see my programme details?",
+    "question_am": null,
+    "answer_en": "On the dashboard, press Programme details. A window opens with your programme name, dates and support contact.",
+    "answer_am": null,
+    "keywords_en": ["programme", "program", "details", "dates", "cohort", "start"],
+    "keywords_am": [],
+    "action_id": "open_programme_modal"
+  },
+  {
+    "id": "faq.score",
+    "section_id": null,
+    "question_en": "Where do I see my score?",
+    "question_am": null,
+    "answer_en": "On the dashboard, press Score details. A window shows your score for each week.",
+    "answer_am": null,
+    "keywords_en": ["score", "marks", "grade", "result", "results", "points", "progress"],
+    "keywords_am": [],
+    "action_id": "open_score_details"
+  },
+  {
+    "id": "faq.week",
+    "section_id": null,
+    "question_en": "How do I go to another week?",
+    "question_am": null,
+    "answer_en": "On the dashboard, use the week strip near the top. Press a week number to see that week's work.",
+    "answer_am": null,
+    "keywords_en": ["week", "weeks", "previous", "strip", "schedule"],
+    "keywords_am": [],
+    "action_id": "switch_week"
+  },
+  {
+    "id": "faq.next-concept",
+    "section_id": null,
+    "question_en": "How do I go to the next lesson?",
+    "question_am": null,
+    "answer_en": "Use the curriculum bar at the bottom of the lesson page. Press Next concept.",
+    "answer_am": null,
+    "keywords_en": ["next", "lesson", "concept", "curriculum", "bar", "continue", "forward"],
+    "keywords_am": [],
+    "action_id": "open_curriculum_nav"
+  },
+  {
+    "id": "faq.person",
+    "section_id": null,
+    "question_en": "Can I talk to a person?",
+    "question_am": null,
+    "answer_en": "Yes. Press Talk to a person at the top of this panel. You see what will be sent before anything is sent.",
+    "answer_am": null,
+    "keywords_en": ["person", "human", "staff", "helper", "teacher", "someone", "support", "call", "talk"],
+    "keywords_am": ["ሰው"],
+    "action_id": "open_help"
+  },
+  {
+    "id": "faq.what-is-va",
+    "section_id": "va-1.future.s2",
+    "question_en": "What does a virtual assistant do?",
+    "question_am": null,
+    "answer_en": "A virtual assistant supports a business from a distance. Common tasks are managing email, scheduling meetings, entering data, answering customer messages, booking travel and preparing simple reports.",
+    "answer_am": null,
+    "keywords_en": ["virtual", "assistant", "va", "tasks", "job", "work", "email", "schedule", "meaning", "definition"],
+    "keywords_am": [],
+    "action_id": null
+  },
+  {
+    "id": "faq.demand",
+    "section_id": "va-1.future.s3",
+    "question_en": "Why is demand for virtual assistants growing?",
+    "question_am": null,
+    "answer_en": "More companies hire remote workers. Small businesses can hire a VA for a few hours a week, and remote hiring lets work continue across time zones.",
+    "answer_am": null,
+    "keywords_en": ["demand", "growing", "growth", "why", "remote", "companies", "hire", "industry", "future"],
+    "keywords_am": [],
+    "action_id": null
+  },
+  {
+    "id": "faq.tools",
+    "section_id": "va-1.future.s4",
+    "question_en": "Which tools does a virtual assistant use?",
+    "question_am": null,
+    "answer_en": "Email, a shared calendar, a spreadsheet program, a document editor, a video call app and a task board. Many clients also use a password manager.",
+    "answer_am": null,
+    "keywords_en": ["tools", "software", "apps", "calendar", "spreadsheet", "video", "password", "task", "board"],
+    "keywords_am": [],
+    "action_id": null
+  },
+  {
+    "id": "faq.skills",
+    "section_id": "va-1.future.s5",
+    "question_en": "Which skills do employers ask for?",
+    "question_am": null,
+    "answer_en": "Clear written communication, good time management, attention to detail and reliability. Working without close supervision is important too.",
+    "answer_am": null,
+    "keywords_en": ["skills", "employers", "communication", "time", "management", "detail", "reliable", "reliability", "soft"],
+    "keywords_am": [],
+    "action_id": null
+  },
+  {
+    "id": "faq.ai",
+    "section_id": "va-1.future.s6",
+    "question_en": "Will AI replace virtual assistants?",
+    "question_am": null,
+    "answer_en": "The lesson says AI changes VA work but does not remove it. Clients still need a person who checks the work and makes judgement calls.",
+    "answer_am": null,
+    "keywords_en": ["ai", "automation", "replace", "robots", "chatgpt", "artificial", "intelligence", "future"],
+    "keywords_am": [],
+    "action_id": null
+  },
+  {
+    "id": "faq.portfolio",
+    "section_id": "va-1.future.s7",
+    "question_en": "What should be in my portfolio?",
+    "question_am": null,
+    "answer_en": "Three strong examples, such as a sample schedule, a cleaned spreadsheet, a well written email or a short report. Remove private client details first.",
+    "answer_am": null,
+    "keywords_en": ["portfolio", "examples", "samples", "show", "work", "first", "client"],
+    "keywords_am": [],
+    "action_id": null
+  }
+]

@@ -1,0 +1,373 @@
+[
+  {
+    "id": "job-001",
+    "sample": true,
+    "title": "Customer support agent",
+    "employer": "Sample Telecom Co.",
+    "category": "customer-support",
+    "city": "Addis Ababa",
+    "summary_simple": "Help customers by phone and chat. Training is paid.",
+    "description": "Help customers by phone and chat. Training is paid. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/001",
+    "contact_hint": "hr@sampletelecomco.example",
+    "deadline": "2026-12-04",
+    "supports": [
+      "step_free",
+      "screen_reader_software",
+      "written_interview_questions"
+    ],
+    "posted_days_ago": 19
+  },
+  {
+    "id": "job-002",
+    "sample": true,
+    "title": "Delivery driver",
+    "employer": "Sample Logistics",
+    "category": "driver",
+    "city": "Adama",
+    "summary_simple": "Deliver parcels in the city. You need a driving licence.",
+    "description": "Deliver parcels in the city. You need a driving licence. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/002",
+    "contact_hint": "hr@samplelogistics.example",
+    "deadline": "2026-12-05",
+    "supports": [
+      "flexible_hours"
+    ],
+    "posted_days_ago": 18
+  },
+  {
+    "id": "job-003",
+    "sample": true,
+    "title": "Data entry clerk",
+    "employer": "Sample Health Records",
+    "category": "data-entry",
+    "city": "Hawassa",
+    "summary_simple": "Type patient forms into a computer system. Accuracy matters.",
+    "description": "Type patient forms into a computer system. Accuracy matters. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/003",
+    "contact_hint": "hr@samplehealthrecords.example",
+    "deadline": "2026-12-06",
+    "supports": [
+      "screen_reader_software",
+      "quiet_room",
+      "large_print_materials"
+    ],
+    "posted_days_ago": 17
+  },
+  {
+    "id": "job-004",
+    "sample": true,
+    "title": "Remote virtual assistant",
+    "employer": "Sample Consulting",
+    "category": "virtual-assistant",
+    "city": "Addis Ababa",
+    "summary_simple": "Manage email and calendars for a small team. Work from home.",
+    "description": "Manage email and calendars for a small team. Work from home. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/004",
+    "contact_hint": "hr@sampleconsulting.example",
+    "deadline": "2026-12-07",
+    "supports": [
+      "remote_option",
+      "flexible_hours",
+      "written_interview_questions",
+      "screen_reader_software"
+    ],
+    "posted_days_ago": 16
+  },
+  {
+    "id": "job-005",
+    "sample": true,
+    "title": "Teaching assistant",
+    "employer": "Sample Primary School",
+    "category": "teaching-assistant",
+    "city": "Bahir Dar",
+    "summary_simple": "Support a class teacher. Help children read and write.",
+    "description": "Support a class teacher. Help children read and write. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/005",
+    "contact_hint": "hr@sampleprimaryschool.example",
+    "deadline": "2026-12-08",
+    "supports": [
+      "step_free",
+      "sign_language_interpreter"
+    ],
+    "posted_days_ago": 15
+  },
+  {
+    "id": "job-006",
+    "sample": true,
+    "title": "Shop assistant",
+    "employer": "Sample Market",
+    "category": "retail",
+    "city": "Dire Dawa",
+    "summary_simple": "Serve customers and keep shelves full. Shifts on weekends.",
+    "description": "Serve customers and keep shelves full. Shifts on weekends. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/006",
+    "contact_hint": "hr@samplemarket.example",
+    "deadline": "2026-12-09",
+    "supports": [
+      "step_free"
+    ],
+    "posted_days_ago": 14
+  },
+  {
+    "id": "job-007",
+    "sample": true,
+    "title": "Office administrator",
+    "employer": "Sample NGO",
+    "category": "admin",
+    "city": "Addis Ababa",
+    "summary_simple": "Keep files, book meetings and order supplies.",
+    "description": "Keep files, book meetings and order supplies. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/007",
+    "contact_hint": "hr@samplengo.example",
+    "deadline": "2026-12-10",
+    "supports": [
+      "step_free",
+      "sign_language_interpreter",
+      "extra_time",
+      "quiet_room"
+    ],
+    "posted_days_ago": 13
+  },
+  {
+    "id": "job-008",
+    "sample": true,
+    "title": "Sales agent",
+    "employer": "Sample Solar",
+    "category": "sales",
+    "city": "Mekelle",
+    "summary_simple": "Sell solar lamps to homes and shops. Pay plus commission.",
+    "description": "Sell solar lamps to homes and shops. Pay plus commission. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/008",
+    "contact_hint": "hr@samplesolar.example",
+    "deadline": "2026-12-11",
+    "supports": [
+      "flexible_hours"
+    ],
+    "posted_days_ago": 12
+  },
+  {
+    "id": "job-009",
+    "sample": true,
+    "title": "Call centre agent (Amharic)",
+    "employer": "Sample Bank",
+    "category": "customer-support",
+    "city": "Addis Ababa",
+    "summary_simple": "Answer customer calls in Amharic and English.",
+    "description": "Answer customer calls in Amharic and English. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/009",
+    "contact_hint": "hr@samplebank.example",
+    "deadline": "2026-12-12",
+    "supports": [
+      "screen_reader_software",
+      "quiet_room",
+      "extra_time"
+    ],
+    "posted_days_ago": 11
+  },
+  {
+    "id": "job-010",
+    "sample": true,
+    "title": "Data entry (remote)",
+    "employer": "Sample Research",
+    "category": "data-entry",
+    "city": "Jimma",
+    "summary_simple": "Enter survey answers into spreadsheets from home.",
+    "description": "Enter survey answers into spreadsheets from home. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/010",
+    "contact_hint": "hr@sampleresearch.example",
+    "deadline": "2026-12-13",
+    "supports": [
+      "remote_option",
+      "screen_reader_software",
+      "flexible_hours"
+    ],
+    "posted_days_ago": 10
+  },
+  {
+    "id": "job-011",
+    "sample": true,
+    "title": "Receptionist",
+    "employer": "Sample Hotel",
+    "category": "admin",
+    "city": "Gondar",
+    "summary_simple": "Welcome guests and answer the phone.",
+    "description": "Welcome guests and answer the phone. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/011",
+    "contact_hint": "hr@samplehotel.example",
+    "deadline": "2026-12-14",
+    "supports": [
+      "step_free",
+      "written_interview_questions"
+    ],
+    "posted_days_ago": 9
+  },
+  {
+    "id": "job-012",
+    "sample": true,
+    "title": "Ride-hail driver",
+    "employer": "Sample Rides",
+    "category": "driver",
+    "city": "Addis Ababa",
+    "summary_simple": "Drive customers across the city. Choose your own hours.",
+    "description": "Drive customers across the city. Choose your own hours. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/012",
+    "contact_hint": "hr@samplerides.example",
+    "deadline": "2026-12-15",
+    "supports": [
+      "flexible_hours"
+    ],
+    "posted_days_ago": 8
+  },
+  {
+    "id": "job-013",
+    "sample": true,
+    "title": "Social media assistant",
+    "employer": "Sample Coffee Exporters",
+    "category": "virtual-assistant",
+    "city": "Addis Ababa",
+    "summary_simple": "Plan and post content for the company pages.",
+    "description": "Plan and post content for the company pages. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/013",
+    "contact_hint": "hr@samplecoffeeexporters.example",
+    "deadline": "2026-12-16",
+    "supports": [
+      "remote_option",
+      "sign_language_interpreter",
+      "written_interview_questions"
+    ],
+    "posted_days_ago": 7
+  },
+  {
+    "id": "job-014",
+    "sample": true,
+    "title": "Classroom support worker",
+    "employer": "Sample Inclusive School",
+    "category": "teaching-assistant",
+    "city": "Adama",
+    "summary_simple": "Help learners with different needs in class.",
+    "description": "Help learners with different needs in class. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/014",
+    "contact_hint": "hr@sampleinclusiveschool.example",
+    "deadline": "2026-12-17",
+    "supports": [
+      "step_free",
+      "sign_language_interpreter",
+      "large_print_materials"
+    ],
+    "posted_days_ago": 6
+  },
+  {
+    "id": "job-015",
+    "sample": true,
+    "title": "Store cashier",
+    "employer": "Sample Supermarket",
+    "category": "retail",
+    "city": "Hawassa",
+    "summary_simple": "Take payments and help customers at the till.",
+    "description": "Take payments and help customers at the till. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/015",
+    "contact_hint": "hr@samplesupermarket.example",
+    "deadline": "2027-01-20",
+    "supports": [
+      "step_free",
+      "extra_time"
+    ],
+    "posted_days_ago": 5
+  },
+  {
+    "id": "job-016",
+    "sample": true,
+    "title": "Telesales agent",
+    "employer": "Sample Insurance",
+    "category": "sales",
+    "city": "Addis Ababa",
+    "summary_simple": "Call customers to explain insurance plans.",
+    "description": "Call customers to explain insurance plans. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/016",
+    "contact_hint": "hr@sampleinsurance.example",
+    "deadline": "2027-01-21",
+    "supports": [
+      "screen_reader_software",
+      "quiet_room"
+    ],
+    "posted_days_ago": 4
+  },
+  {
+    "id": "job-017",
+    "sample": true,
+    "title": "Bookkeeping assistant",
+    "employer": "Sample Accounting",
+    "category": "admin",
+    "city": "Bahir Dar",
+    "summary_simple": "Record invoices and payments in a spreadsheet.",
+    "description": "Record invoices and payments in a spreadsheet. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/017",
+    "contact_hint": "hr@sampleaccounting.example",
+    "deadline": "2027-01-22",
+    "supports": [
+      "screen_reader_software",
+      "extra_time",
+      "written_interview_questions"
+    ],
+    "posted_days_ago": 3
+  },
+  {
+    "id": "job-018",
+    "sample": true,
+    "title": "Customer chat agent (remote)",
+    "employer": "Sample E-commerce",
+    "category": "customer-support",
+    "city": "Dire Dawa",
+    "summary_simple": "Answer customer chats from home. Text only, no phone.",
+    "description": "Answer customer chats from home. Text only, no phone. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/018",
+    "contact_hint": "hr@samplee-commerce.example",
+    "deadline": "2027-01-23",
+    "supports": [
+      "remote_option",
+      "sign_language_interpreter",
+      "screen_reader_software",
+      "flexible_hours"
+    ],
+    "posted_days_ago": 2
+  },
+  {
+    "id": "job-019",
+    "sample": true,
+    "title": "Library assistant",
+    "employer": "Sample University",
+    "category": "teaching-assistant",
+    "city": "Gondar",
+    "summary_simple": "Help students find books and use computers.",
+    "description": "Help students find books and use computers. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/019",
+    "contact_hint": "hr@sampleuniversity.example",
+    "deadline": "2027-01-24",
+    "supports": [
+      "step_free",
+      "quiet_room",
+      "large_print_materials"
+    ],
+    "posted_days_ago": 1
+  },
+  {
+    "id": "job-020",
+    "sample": true,
+    "title": "Online research assistant",
+    "employer": "Sample Media",
+    "category": "virtual-assistant",
+    "city": "Mekelle",
+    "summary_simple": "Find and summarise information for writers.",
+    "description": "Find and summarise information for writers. This is a sample job for the Walk With Me demo. It is not a real vacancy.",
+    "apply_url": "https://example.com/apply/020",
+    "contact_hint": "hr@samplemedia.example",
+    "deadline": "2027-01-05",
+    "supports": [
+      "remote_option",
+      "screen_reader_software",
+      "extra_time"
+    ],
+    "posted_days_ago": 0
+  }
+]

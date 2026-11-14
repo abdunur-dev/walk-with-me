@@ -1,0 +1,37 @@
+/* Savanna demo stand-in. Replace with the real Savanna starter styles. */
+* { box-sizing: border-box; }
+html { scroll-padding-top: 80px; }
+body { margin: 0; font-family: system-ui, "Noto Sans Ethiopic", sans-serif; font-size: 18px; line-height: 1.6; color: #1d1b3a; background: #f6f7fa; }
+.skip { position: absolute; inset-inline-start: -9999px; top: 0; background: #fff; padding: 8px 12px; z-index: 100; }
+.skip:focus { inset-inline-start: 8px; }
+.standin { background: #fff3c4; color: #1d1b3a; text-align: center; padding: 6px 12px; font-size: 16px; margin: 0; }
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: #352E72; color: #fff; flex-wrap: wrap; }
+.topbar a, .topbar button { color: #fff; }
+.brand { font-weight: 700; text-decoration: none; font-size: 20px; }
+.brand small { font-weight: 400; font-size: 14px; }
+.hamburger, .courses-toggle { min-height: 44px; padding: 0 14px; background: transparent; border: 2px solid #fff; border-radius: 10px; font: inherit; cursor: pointer; }
+.courses { position: relative; margin-inline-start: auto; }
+.dropdown { position: absolute; inset-inline-end: 0; top: 52px; background: #fff; border: 2px solid #352E72; border-radius: 10px; list-style: none; margin: 0; padding: 8px; min-width: 260px; z-index: 30; }
+.dropdown a { color: #352E72; display: block; padding: 10px; }
+.sidebar { position: fixed; top: 64px; inset-inline-start: 0; bottom: 0; width: min(300px, 85vw); background: #fff; border-inline-end: 2px solid #352E72; padding: 16px; overflow: auto; z-index: 15; }
+.sidebar a { color: #352E72; display: inline-block; padding: 6px 0; }
+.lesson, .dash { max-width: 760px; margin: 0 auto; padding: 24px 16px 140px; }
+.crumbs { color: #4b4770; margin: 0; }
+h1 { font-size: 32px; line-height: 1.2; }
+h2 { scroll-margin-top: 90px; }
+[id] { scroll-margin-top: 90px; }
+.callouts { background: #eef0f6; border-inline-start: 6px solid #755F96; padding: 8px 20px; border-radius: 8px; }
+.mark-complete, .btn { min-height: 48px; padding: 0 22px; font: inherit; font-weight: 700; background: #352E72; color: #fff; border: 0; border-radius: 10px; cursor: pointer; }
+.mark-complete[aria-pressed="true"] { background: #1f6b3a; }
+.mark-complete[aria-pressed="true"]::before { content: "✓ "; }
+.curriculum-bar { position: fixed; bottom: 0; inset-inline: 0; display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; background: #fff; border-top: 2px solid #352E72; z-index: 10; padding-inline-end: 120px; flex-wrap: wrap; }
+.curriculum-bar a { color: #352E72; font-weight: 700; padding: 8px 0; }
+.week-strip { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+.week-strip button { min-width: 48px; min-height: 48px; border: 2px solid #352E72; background: #fff; color: #352E72; border-radius: 10px; font: inherit; cursor: pointer; }
+.week-strip button[aria-current="true"] { background: #352E72; color: #fff; font-weight: 700; }
+.card { background: #fff; border: 2px solid #352E72; border-radius: 14px; padding: 16px 20px; margin: 16px 0; }
+dialog { border: 2px solid #352E72; border-radius: 14px; max-width: min(520px, 92vw); }
+dialog::backdrop { background: rgba(20, 18, 50, .5); }
+:focus-visible { outline: 3px solid #0599E5; outline-offset: 3px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: start; padding: 6px 8px; border-bottom: 1px solid #ccc; }

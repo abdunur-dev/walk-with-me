@@ -1,0 +1,109 @@
+/* Walk With Me design tokens (UI/UX §2). Every page and the widget use these.
+   Do not add colours, fonts or radii that are not in this file. */
+
+/* Self-hosted fonts: add subset woff2 files to /site/assets/fonts/ and uncomment.
+@font-face { font-family: "Space Grotesk"; src: url("/site/assets/fonts/space-grotesk-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("/site/assets/fonts/atkinson-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("/site/assets/fonts/atkinson-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Noto Sans Ethiopic"; src: url("/site/assets/fonts/noto-ethiopic-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Noto Sans Ethiopic"; src: url("/site/assets/fonts/noto-ethiopic-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Space Mono"; src: url("/site/assets/fonts/space-mono-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+*/
+
+:root {
+  /* Palette */
+  --indigo: #352E72;
+  --purple: #755F96;
+  --mist: #D5D8DF;
+  --blue: #0599E5;    /* focus ring and graphics only, never small text */
+  --slate: #7D779C;   /* hairlines and disabled only, never text */
+  --teal: #48B3D1;
+  --lime: #C8F135;    /* the one accent: primary buttons and section highlighter */
+  --white: #FFFFFF;
+  --error-icon: #B3261E; /* icon only, never text */
+
+  /* Roles */
+  --bg: var(--white);
+  --text: var(--indigo);
+  --border-color: var(--indigo);
+  --focus: var(--blue);
+  --primary-fill: var(--lime);
+  --primary-text: var(--indigo);
+  --card-dark: var(--indigo);
+  --card-dark-text: var(--white);
+  --highlight: var(--lime);
+  --badge-fill: var(--teal);
+  --section-bg: var(--mist);
+  --input-bg: var(--mist);
+  --edge-color: var(--indigo);
+  --edge-dark-color: var(--blue);
+  --border-width: 2px;
+
+  /* Type */
+  --font-head: "Space Grotesk", "Noto Sans Ethiopic", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Noto Sans Ethiopic", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --text-sm: 16px;  --lh-sm: 1.5;
+  --text-md: 18px;  --lh-md: 1.6;
+  --text-lg: 22px;  --lh-lg: 1.4;
+  --text-xl: 28px;  --lh-xl: 1.25;
+  --text-2xl: 40px; --lh-2xl: 1.1;
+  --text-3xl: clamp(40px, 7vw, 64px); --lh-3xl: 1.05;
+  --lh-ethiopic: 1.7;
+  --measure: 70ch;
+
+  /* Spacing */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 72px; --space-9: 96px;
+
+  /* Shape */
+  --radius-control: 12px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --border: var(--border-width) solid var(--border-color);
+  --edge: 0 4px 0 var(--edge-color);
+  --edge-pressed: 0 1px 0 var(--edge-color);
+
+  /* Layout */
+  --gutter: 16px;
+  --content-max: 1120px;
+  --section-space: var(--space-8);
+  --cta-bar-height: 0px;
+
+  /* Motion */
+  --motion-duration: 150ms;
+  --motion-ease: ease-out;
+
+  /* Targets */
+  --target-min: 24px;
+  --target-primary: 48px;
+}
+
+@media (min-width: 720px) { :root { --gutter: 32px; } }
+@media (min-width: 1024px) { :root { --gutter: 48px; --section-space: var(--space-9); } }
+
+/* Larger text */
+[data-text="large"] {
+  --text-sm: 18px; --text-md: 21px; --text-lg: 25px; --text-xl: 32px; --text-2xl: 46px;
+}
+
+/* High contrast (UI/UX §2.3): black and white, 3 px borders, no lime or teal, solid edges */
+[data-contrast="high"] {
+  --bg: #FFFFFF; --text: #000000; --border-color: #000000; --focus: #0000FF;
+  --primary-fill: #000000; --primary-text: #FFFFFF;
+  --card-dark: #000000; --card-dark-text: #FFFFFF;
+  --highlight: #FFFFFF; --badge-fill: #FFFFFF; --section-bg: #FFFFFF; --input-bg: #FFFFFF;
+  --edge-color: #000000; --edge-dark-color: #000000;
+  --border-width: 3px;
+  --indigo: #000000; --purple: #000000; --mist: #FFFFFF; --teal: #FFFFFF; --lime: #FFFFFF; --blue: #0000FF;
+}
+
+/* Motion off: system setting or the "Stop motion" switch */
+[data-motion="off"] { --motion-duration: 0ms; }
+[data-motion="off"] *, [data-motion="off"] *::before, [data-motion="off"] *::after {
+  transition: none !important; animation: none !important; scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-duration: 0ms; }
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

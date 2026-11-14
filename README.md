@@ -1,0 +1,127 @@
+# Walk With Me
+
+A help widget for Savanna course pages. It answers in Amharic or English **from the course content only**, shows where each answer came from, moves the learner's focus to the control they are looking for, and brings in a person with one button. The same helper works on Telegram and by SMS, and covers jobs: alerts, job questions and interview accommodation requests.
+
+Digital Bridge Accessibility Hackathon 2026 · Track 3.
+
+## What is in this repository
+
+| Folder | What |
+|---|---|
+| `api/` | FastAPI app: chat with retrieval and citations, AI providers, human help (REST + WebSocket), jobs, alerts, SMS, Telegram bot, teacher view |
+| `widget/` | `walk-with-me.js` (no build step, Shadow DOM), `actions.js` (Show me targets), `faq-bundle.js` (offline answers) |
+| `site/` | Home, install docs, jobs, staff console, teacher view, SMS simulator, 404/500 |
+| `savanna/` | **Stand-in** Savanna pages used for the demo. Replace with the real starter (see below) |
+| `data/` | `course.json` (generated), `faq.json` (human-written), `jobs.json` (20 sample jobs) |
+| `scripts/` | `extract_course.py`, `build_faq_bundle.py`, `seed.py` |
+| `docs/` | Conformance report (to fill), testing notes, `openapi.json` |
+
+## Install in one hour
+
+### With Docker
+
+```sh
+cp .env.example .env          # set STAFF_TOKEN to a long random value
+docker compose up --build
+```
+
+Open http://localhost:8000. Nothing else is needed: `AI_PROVIDER=offline` answers from the human-written FAQ and course text.
+
+### Without Docker (Python 3.11+)
+
+```sh
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt        # Windows: .venv\Scripts\pip
+cp .env.example .env
+.venv/bin/uvicorn app.main:app --app-dir api --port 8000
+```
+
+| Page | URL |
+|---|---|
+| Home | `/site/index.html` |
+| Savanna demo with the widget | `/savanna/pages/concept-with-navigation.html` |
+| Jobs | `/site/jobs.html` |
+| Staff console (needs `STAFF_TOKEN`) | `/site/staff.html` |
+| Teacher view (needs `STAFF_TOKEN`) | `/site/teacher.html` |
+| SMS simulator | `/site/sms-sim.html` |
+| API reference | `/docs` (Swagger UI), `/openapi.json` |
+
+### Add it to any page (Level 1)
+
+```html
+<script src="https://YOUR-HOST/widget/walk-with-me.js" data-api="https://YOUR-HOST" data-lang="am" defer></script>
+```
+
+`data-lang` = `en` or `am`, `data-mode` = `normal` or `simple`, `data-offline-only="true"` skips the API and answers from `faq-bundle.js`. It also works when a page is opened from `file://`.
+
+Level 2 is the REST API (`/openapi.json`, exported to `docs/openapi.json`). Level 3: `GET /v1/jobs?format=jsonld` returns schema.org `JobPosting`.
+
+## Choosing the AI provider
+
+| `AI_PROVIDER` | Needs | Notes |
+|---|---|---|
+| `offline` (default) | nothing | Returns the best matching human-written answer or course passage with its citation. Always the final fallback |
+| `claude` | `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | Official Anthropic Python SDK. Best Amharic. Amharic questions are turned into English search keywords before retrieval |
+| `local` | `LOCAL_LLM_URL`, `LOCAL_LLM_MODEL` | Any OpenAI-compatible server. `docker compose --profile local-ai up` starts Ollama; pull a model into it first. Small local models are weak in Amharic: use this for English |
+
+Grounding rules, enforced in `api/app/chat_service.py`:
+
+1. Top 4 passages are retrieved (BM25 over sections, FAQ, and jobs when the question is about jobs).
+2. If the best passage covers less than `MIN_SCORE` of the question, the model is skipped and the learner gets "That is not in this course" plus **Talk to a person**.
+3. The model sees only those passages and must return JSON with citation ids.
+4. An answer with no citations, or citing an id that was not retrieved, is rejected, as is any error, refusal or a reply slower than `PROVIDER_TIMEOUT` (6 s). The offline answer is used instead, and the widget says "Answered without internet".
+
+`GET /v1/status` shows which provider is configured and which one is actually answering.
+
+## Telegram and SMS
+
+- **Telegram:** create a bot with BotFather, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_BOT_USERNAME`. Add the bot to a staff group and set `TELEGRAM_STAFF_CHAT_ID`; new help requests are posted there, and staff can answer by replying to the bot's message. Long polling by default; set `TELEGRAM_MODE=webhook` with a public `PUBLIC_BASE_URL` for production. Commands: `/start`, `/help`, `/ai`, `/jobs`, `/alerts`, `/accommodation`, `/stop`.
+- **SMS:** `SMS_GATEWAY=mock` sends nothing and shows messages in `/site/sms-sim.html`. `africastalking` is wired behind the same `SmsGateway` interface (`api/app/sms/`). **Not verified:** whether it delivers to Ethio Telecom and Safaricom Ethiopia numbers, and what a sender id costs. Inbound webhook: `POST /v1/sms/inbound` with `{"from": "...", "text": "..."}`. Commands: `HELP`, `ASK <question>`, `JOBS <type> <city>`, `ALERT <type> <city>` then `YES`, `STOP`.
+
+## Privacy and deletion
+
+Ethiopia's Personal Data Protection Proclamation No. 1321/2024 applies. What we collect, why, and when it is deleted:
+
+| Data | Why | Deleted |
+|---|---|---|
+| Anonymous session id and chat text | Answer questions, give a person context | 7 days after the session starts (hourly purge), or at once with `DELETE /v1/me?session_id=…` |
+| Place message the learner approved | Human help | With the request's messages, 30 days after it is resolved |
+| Call-back phone number | Call the learner back | When the request is resolved or abandoned |
+| Alert subscription and phone number / Telegram chat id | Send job alerts the learner asked for | On `STOP`, `/stop` or unsubscribe; contacts removed 30 days after opting out, or after 12 months with no alerts |
+| Question text for the teacher view | Show which questions come up most | 90 days. Personal details are stripped and it has no link to a session |
+| Consent and share events | Show consent was given | 90 days. They never hold content |
+| Page snapshots | Show a helper the learner's page | Memory only, cleared when sharing stops or the request ends |
+| Accommodation request text | — | Never stored |
+
+- No names, no emails, no learner accounts. Session ids are random and kept on the device.
+- Phone numbers used as SMS session references are hashed with `HMAC_SECRET`. `contacts.address` keeps the raw number only for people who opted in to alerts, because delivery needs it. Restrict permissions on the SQLite file (`var/walkwithme.db`, or the `wwm-db` volume).
+- Admin deletion of a phone number: `sqlite3 var/walkwithme.db "DELETE FROM contacts WHERE address='+2519XXXXXXXX';"` (subscriptions and deliveries cascade).
+- Back-ups are not set up. To copy the database: `docker compose cp api:/app/var/walkwithme.db ./backup.db`.
+- Staff and teacher endpoints need the bearer `STAFF_TOKEN` and get no CORS headers. Public endpoints allow any origin and use no cookies.
+
+## Content and Amharic
+
+- **Every Amharic string must be written or checked by a native speaker.** None has been checked yet. Amharic UI strings are the starter strings from the design document and the widget marks them as unchecked. FAQ `answer_am` is empty, so an Amharic question gets the English answer with the note "Amharic answer not ready yet" rather than machine translation. Set `answer_am`, `body_am`, `term_pairs` and `verified_am` in `data/` once checked.
+- To use the real Savanna starter: copy its pages into `savanna/`, run `python scripts/extract_course.py savanna/pages/<concept page>.html --inject` (on the copy) to add `wwm-sN` anchors and regenerate `data/course.json`, update the selectors in `widget/actions.js` from DevTools, then `python scripts/build_faq_bundle.py`.
+- `data/jobs.json` is sample data with made-up employers, shown as "Sample job".
+
+## Tests
+
+```sh
+.venv/bin/python -m pytest api/tests -q
+```
+
+Covers Amharic folding and punctuation, retrieval threshold (20 in-course questions in English and Amharic, 5 out-of-course), citation validation and the fallback chain, handoff flow and WebSocket, phone deletion on resolve, snapshot sanitising, job filters and JSON-LD, alert opt-in and no-duplicate delivery, SMS commands, teacher threshold, purge, Ethiopian dates. Browser tests are in `tests/e2e/` (`npm install`, then `BASE_URL=http://localhost:8000 npm test`; add `BROWSER_CHANNEL=msedge` or `chrome`, or run `npx playwright install chromium`). They cover axe-core on every page (fail on critical or serious), the jobs dialog steps, 320 px reflow, and a full learner-to-staff run: question, cited answer, Talk to a person, claim, chat both ways over WebSocket, page snapshot in a sandboxed iframe, resolve.
+
+## Known limits and things to verify
+
+- The Savanna pages here are a stand-in that copies the controls named in the starter README; selectors must be checked against the real starter.
+- Ethiopian date conversion is tested against two Ethiopian New Years and a Pagume 6; **verify** the Amharic month spellings with a native speaker.
+- Browser Amharic speech recognition and Amharic voices vary by phone. Text is always the full path. Test on the co-designer's phone.
+- Live screen share uses public STUN only. Without a TURN server some networks fail; the page snapshot is the fallback and the mobile path.
+- Rate limits are in memory (one process). Run one API container, or move them to a shared store.
+- No accessibility results are claimed yet. `docs/conformance-report.md` must be filled in with what testing actually shows.
+
+## Licence
+
+To be confirmed with the organisers (ALX). Add the licence line here before submission.
