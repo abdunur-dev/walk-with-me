@@ -106,6 +106,15 @@ main > :first-child { padding-block-start: var(--space-7); }
   border: var(--border); border-radius: var(--radius-pill); background: var(--bg); color: var(--text); cursor: pointer; }
 .toggle[aria-pressed="true"] { background: var(--card-dark); color: var(--card-dark-text); }
 .toggle[aria-pressed="true"]::before { content: "✓ "; }
+
+/* Language picker: native <select> so it works with every screen reader and on mobile.
+   Same 44px target and pill shape as the display toggles beside it. */
+.locale-switcher { display: inline-flex; align-items: center; }
+.locale-switcher select { font-family: var(--font-body); font-size: var(--text-sm); min-block-size: 44px;
+  padding: var(--space-2) var(--space-3); border: var(--border); border-radius: var(--radius-pill);
+  background: var(--bg); color: var(--text); cursor: pointer; max-inline-size: 16rem; }
+.locale-switcher select:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.locale-switcher-compact select { max-inline-size: 12rem; }
 @media (max-width: 860px) { .header-cta { display: none; } .site-nav { flex-basis: 100%; margin-inline-start: 0; } }
 
 /* ───────── Hero ───────── */

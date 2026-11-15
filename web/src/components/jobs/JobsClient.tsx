@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { getPref } from "@/lib/prefs";
+import { normalizeLocale } from "@/lib/i18n";
 import s from "./jobs.module.css";
 
 type Opt = { id: string; label: string };
@@ -20,7 +21,10 @@ const phoneOk = (v: string) => /^(?:\+251|251|0)[79]\d{8}$/.test(v.replace(/[\s\
 const lowerFirst = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
 const sentenceList = (items: string[]) =>
   items.length <= 1 ? items.join("") : items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
-const lang = () => (getPref("wwm.lang") === "am" ? "am" : "en");
+// The jobs API only answers in Amharic or English, so the UI locale is mapped
+// down to that pair here. Kept separate from the site-wide locale on purpose:
+// broadening it without backend support would return unsupported-language errors.
+const lang = () => (normalizeLocale(getPref("wwm.lang")) === "am" ? "am" : "en");
 const toProblem = (e: unknown): Problem =>
   e instanceof ApiError ? { message: e.message, fix: e.fix } : { message: String((e as Error)?.message ?? e) };
 

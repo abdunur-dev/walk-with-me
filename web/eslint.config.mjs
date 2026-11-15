@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Node-only locale build tooling. These run under `node`, not in the app
+    // bundle, so the browser-oriented rules (no-require-imports) do not apply.
+    "src/locales/**/*.js",
   ]),
 ]);
 
