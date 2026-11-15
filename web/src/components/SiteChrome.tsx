@@ -10,6 +10,7 @@ const NAV = [
   { href: "/", label: "Try it" },
   { href: "/docs", label: "Install" },
   { href: "/jobs", label: "Jobs" },
+  { href: "/speech", label: "Voice translation" },
   { href: "/docs#api", label: "Docs" },
 ];
 

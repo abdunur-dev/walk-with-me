@@ -23,6 +23,11 @@ const FEATURES = [
     href: "/docs#answers", art: <AmharicArt />, dark: true,
   },
   {
+    title: "Translate a voice note",
+    text: "Choose a short Amharic recording and read the transcript and English translation. You choose before any audio is processed.",
+    href: "/speech", art: <AmharicArt />, dark: false,
+  },
+  {
     title: "Jobs and support",
     text: "Find jobs that offer the support you need. Tell no one why. Get alerts on Telegram or SMS, and write an interview request.",
     href: "/jobs", art: <JobsArt />, dark: false,
