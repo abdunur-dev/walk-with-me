@@ -70,7 +70,7 @@ export default function StaffConsole() {
   }, [token]);
 
   const loadQueue = useCallback(() => {
-    call<{ items: QueueItem[] }>("/v1/staff/handoffs").then((d) => setQueue(d.items), (err) => setQueueStatus(errorText(err)));
+    call<{ items: QueueItem[] }>("/v1/staff/handoffs").then((d) => { setQueue(d.items); setQueueStatus(""); }, (err) => setQueueStatus(errorText(err)));
   }, [call]);
 
   useEffect(() => {
@@ -147,6 +147,7 @@ export default function StaffConsole() {
       <section className={styles.queuePane} aria-labelledby="queue-title">
         <h2 id="queue-title" ref={queueTitleRef} tabIndex={-1}>Requests</h2>
         <p id="queue-status" role="status" aria-live="polite">{queueStatus}</p>
+        {queue && <p className={styles.queueSummary}>{queue.filter((r) => r.status === "open").length} waiting · {queue.filter((r) => r.status === "claimed").length} being helped</p>}
         <ul id="queue" className={styles.queue}>
           {queue && !queue.length && <li>No open requests.</li>}
           {queue?.map((r) => {
@@ -197,7 +198,7 @@ export default function StaffConsole() {
               <pre id="d-place" className={styles.place} tabIndex={0} aria-label="Place message">{detail?.place_text ?? ""}</pre>
               {detail?.place.note && <p id="d-note">Learner added: {detail.place.note}</p>}
               {detail?.callback_phone && (
-                <p id="d-phone">{PREF[detail.contact_pref]} number: {detail.callback_phone}. Deleted when you resolve.</p>
+                <p id="d-phone">{PREF[detail.contact_pref]} number: <a href={`tel:${detail.callback_phone}`}>{detail.callback_phone}</a>. Deleted when you resolve.</p>
               )}
             </div>
             <div className="actions" style={{ marginBlockEnd: "var(--space-5)" }}>

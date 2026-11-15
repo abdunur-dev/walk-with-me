@@ -40,6 +40,7 @@
   var I18N = {
     en: {
       title: "Walk With Me", help: "Help", talk_person: "Talk to a person", send: "Send", close: "Close help",
+      call_staff: "Call support", move_widget: "Move chat window. Drag or use arrow keys.",
       ask_placeholder: "Type your question", ask_label: "Your question", simple_mode: "Simple mode",
       show_me: "Show me where", share_place: "Share my place", jobs: "Jobs", mic: "Speak your question",
       mic_stop: "Stop listening", larger: "Larger text", contrast: "High contrast", motion: "Stop motion",
@@ -328,7 +329,7 @@
     "background:var(--primary-fill);color:var(--primary-text);border:var(--bw) solid var(--border-c);box-shadow:var(--edge);border-radius:var(--radius-pill);font-weight:700;font-size:18px;font-family:var(--font-body)}",
     ".launcher:active{box-shadow:var(--edge-pressed);transform:translateY(3px)}",
     ".launcher svg{width:24px;height:24px;flex:none}",
-    ".panel{position:fixed;inset-inline-end:16px;bottom:calc(16px + var(--wwm-bottom-offset,0px));z-index:2147483001;width:400px;max-width:calc(100vw - 32px);height:600px;max-height:calc(100vh - 32px);",
+    ".panel{position:fixed;inset-inline-end:16px;bottom:calc(16px + var(--wwm-bottom-offset,0px));z-index:2147483001;width:400px;max-width:calc(100vw - 32px);height:600px;max-height:calc(100vh - 32px);transform:translate(var(--wwm-x,0px),var(--wwm-y,0px));",
     "display:flex;flex-direction:column;background:var(--bg);border:var(--bw) solid var(--border-c);border-radius:var(--radius-card);box-shadow:var(--edge);overflow:hidden;transition:opacity var(--t) ease-out,transform var(--t) ease-out}",
     ".panel[hidden]{display:none}",
     "@media (max-width:480px){.panel{inset-inline:0;bottom:0;width:100%;max-width:100%;height:85vh;border-radius:var(--radius-card) var(--radius-card) 0 0}}",
@@ -340,6 +341,7 @@
     ".hdr h2{font-family:var(--font-head);font-size:20px;margin:0;margin-inline-end:auto;font-weight:700}",
     ".hdr button{min-height:44px;min-width:44px;padding:0 10px;background:transparent;color:var(--card-dark-text);border:2px solid var(--card-dark-text);border-radius:var(--radius-control)}",
     ".hdr button[aria-pressed=true]{background:var(--card-dark-text);color:var(--card-dark)}",
+    ".hdr .move-handle{touch-action:none;cursor:move}.hdr .call-staff{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;color:var(--card-dark-text);border:2px solid var(--card-dark-text);border-radius:var(--radius-control);font-weight:700}.hdr .call-staff[hidden]{display:none}",
     ".hdr :focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 6px var(--blue)}",
     ".hdr .btn-primary{width:100%;background:var(--primary-fill);color:var(--primary-text);border:var(--bw) solid var(--card-dark-text);font-weight:700;min-height:48px}",
     ".unverified{font-size:16px;margin:0}",
@@ -353,7 +355,7 @@
     ".btn-primary{background:var(--primary-fill);color:var(--primary-text)}",
     ".btn-quiet{background:transparent;border:0;box-shadow:none;text-decoration:underline;min-height:44px;padding:0 8px}",
     ".log{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}",
-    ".msg{max-width:85%;padding:12px 14px;border-radius:12px;font-size:var(--fs);white-space:pre-wrap;overflow-wrap:anywhere}",
+    ".msg{max-width:85%;padding:14px 16px;border-radius:12px;font-size:var(--fs);line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}",
     ".msg[lang=am]{line-height:1.7}",
     ".msg.learner{align-self:flex-end;background:var(--indigo);color:var(--white)}",
     ":host([data-contrast=high]) .msg.learner{background:#000;color:#fff}",
@@ -416,12 +418,14 @@
     el.shareStrip = h("div", { class: "share-strip", hidden: true }, [el.stopShare, el.shareLabel, el.updateView]);
 
     el.title = h("h2", { id: "wwm-title" });
+    el.moveBtn = btn("↕", "move-handle", moveWidgetStart, { "aria-label": t("move_widget"), title: t("move_widget"), onkeydown: moveWidgetKey });
+    el.callStaff = h("a", { class: "call-staff", hidden: true, href: "#", text: t("call_staff") });
     el.langBtn = btn("", "", toggleLang, { "aria-label": "Language: switch between Amharic and English" });
     el.simpleBtn = btn("", "", function () { setMode(prefs.mode === "simple" ? "normal" : "simple"); });
     el.closeBtn = btn("×", "", closePanel);
     el.talkBtn = btn("", "btn-primary", function () { startHandoff(); });
     el.unverified = h("p", { class: "unverified", lang: "en" });
-    var hdr = h("div", { class: "hdr" }, [h("div", { class: "hdr-row" }, [el.title, el.langBtn, el.simpleBtn, el.closeBtn]), el.talkBtn, el.unverified]);
+    var hdr = h("div", { class: "hdr" }, [h("div", { class: "hdr-row" }, [el.title, el.callStaff, el.moveBtn, el.langBtn, el.simpleBtn, el.closeBtn]), el.talkBtn, el.unverified]);
 
     el.flow = h("div", { class: "flow" });
     el.log = h("div", { class: "log", role: "log", "aria-live": "polite", "aria-relevant": "additions", "aria-labelledby": "wwm-log-label" });
@@ -456,7 +460,60 @@
     wrap.appendChild(el.launcher);
     wrap.appendChild(el.panel);
     document.body.appendChild(host);
+    restoreWidgetPosition();
+    loadStaffContact();
     applyPrefs();
+  }
+
+  var widgetOffset = { x: 0, y: 0 }, dragPoint = null;
+  function clampWidgetOffset(x, y) {
+    var r = el.panel.getBoundingClientRect(), pad = 8;
+    return { x: Math.max(pad - (r.left - widgetOffset.x), Math.min(x, window.innerWidth - pad - (r.right - widgetOffset.x))),
+      y: Math.max(pad - (r.top - widgetOffset.y), Math.min(y, window.innerHeight - pad - (r.bottom - widgetOffset.y))) };
+  }
+  function applyWidgetOffset() {
+    host.style.setProperty("--wwm-x", widgetOffset.x + "px");
+    host.style.setProperty("--wwm-y", widgetOffset.y + "px");
+  }
+  function restoreWidgetPosition() {
+    try { widgetOffset = JSON.parse(localStorage.getItem("wwm.widgetPosition") || '{"x":0,"y":0}'); } catch (e) { widgetOffset = { x: 0, y: 0 }; }
+    if (!widgetOffset || !isFinite(widgetOffset.x) || !isFinite(widgetOffset.y)) widgetOffset = { x: 0, y: 0 };
+    applyWidgetOffset();
+    window.addEventListener("resize", function () { widgetOffset = clampWidgetOffset(widgetOffset.x, widgetOffset.y); applyWidgetOffset(); });
+  }
+  function moveWidgetStart(e) {
+    if (e.button !== undefined && e.button !== 0) return;
+    e.preventDefault(); e.stopPropagation();
+    dragPoint = { id: e.pointerId, x: e.clientX, y: e.clientY, ox: widgetOffset.x, oy: widgetOffset.y };
+    if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+    e.currentTarget.onpointermove = function (ev) {
+      if (!dragPoint || ev.pointerId !== dragPoint.id) return;
+      widgetOffset = clampWidgetOffset(dragPoint.ox + ev.clientX - dragPoint.x, dragPoint.oy + ev.clientY - dragPoint.y);
+      applyWidgetOffset();
+    };
+    e.currentTarget.onpointerup = e.currentTarget.onpointercancel = function () {
+      dragPoint = null;
+      try { localStorage.setItem("wwm.widgetPosition", JSON.stringify(widgetOffset)); } catch (ignore) { /* storage may be disabled */ }
+      e.currentTarget.onpointermove = e.currentTarget.onpointerup = e.currentTarget.onpointercancel = null;
+    };
+  }
+  function moveWidgetKey(e) {
+    var step = e.shiftKey ? 48 : 16, x = widgetOffset.x, y = widgetOffset.y;
+    if (e.key === "ArrowLeft") x -= step; else if (e.key === "ArrowRight") x += step;
+    else if (e.key === "ArrowUp") y -= step; else if (e.key === "ArrowDown") y += step; else return;
+    e.preventDefault();
+    widgetOffset = clampWidgetOffset(x, y); applyWidgetOffset();
+    try { localStorage.setItem("wwm.widgetPosition", JSON.stringify(widgetOffset)); } catch (ignore) { /* storage may be disabled */ }
+  }
+  function loadStaffContact() {
+    if (!API) return;
+    apiFetch("/v1/contact", {}, 4000).then(function (c) {
+      var phone = String(c.phone || "");
+      if (!/^\+?[0-9]{7,15}$/.test(phone)) return;
+      el.callStaff.href = "tel:" + phone;
+      el.callStaff.textContent = c.label || t("call_staff");
+      el.callStaff.hidden = false;
+    }).catch(function () { /* hotline is optional */ });
   }
 
   function applyPrefs() {

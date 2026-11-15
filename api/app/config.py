@@ -49,6 +49,8 @@ class Settings:
     africastalking_api_key: str = field(default_factory=lambda: os.getenv("AFRICASTALKING_API_KEY", ""))
     africastalking_sender_id: str = field(default_factory=lambda: os.getenv("AFRICASTALKING_SENDER_ID", ""))
     staff_token: str = field(default_factory=lambda: os.getenv("STAFF_TOKEN", ""))
+    staff_contact_phone: str = field(default_factory=lambda: os.getenv("STAFF_CONTACT_PHONE", ""))
+    staff_contact_label: str = field(default_factory=lambda: os.getenv("STAFF_CONTACT_LABEL", "Call support"))
     hmac_secret: str = field(default_factory=lambda: os.getenv("HMAC_SECRET", "change-me"))
     public_base_url: str = field(default_factory=lambda: os.getenv("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/"))
     db_path: Path = field(default_factory=lambda: Path(os.getenv("DB_PATH", str(ROOT / "var" / "walkwithme.db"))))
