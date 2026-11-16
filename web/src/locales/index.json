@@ -1,0 +1,115 @@
+{
+  "defaultLocale": "en",
+  "locales": [
+    {
+      "code": "en",
+      "name": "English",
+      "endonym": "English"
+    },
+    {
+      "code": "am",
+      "name": "Amharic",
+      "endonym": "አማርኛ"
+    },
+    {
+      "code": "om",
+      "name": "Afaan Oromo",
+      "endonym": "Afaan Oromoo"
+    },
+    {
+      "code": "ti",
+      "name": "Tigrinya",
+      "endonym": "ትግርኛ"
+    },
+    {
+      "code": "so",
+      "name": "Somali",
+      "endonym": "Soomaali"
+    },
+    {
+      "code": "sw",
+      "name": "Swahili",
+      "endonym": "Kiswahili"
+    },
+    {
+      "code": "rw",
+      "name": "Kinyarwanda",
+      "endonym": "Ikinyarwanda"
+    },
+    {
+      "code": "rn",
+      "name": "Kirundi",
+      "endonym": "Ikirundi"
+    },
+    {
+      "code": "lg",
+      "name": "Luganda",
+      "endonym": "Luganda"
+    },
+    {
+      "code": "ki",
+      "name": "Kikuyu",
+      "endonym": "Gĩkũyũ"
+    },
+    {
+      "code": "sn",
+      "name": "Shona",
+      "endonym": "ChiShona"
+    },
+    {
+      "code": "ny",
+      "name": "Nyanja (Chichewa)",
+      "endonym": "Chichewa"
+    },
+    {
+      "code": "zu",
+      "name": "Zulu",
+      "endonym": "isiZulu"
+    },
+    {
+      "code": "xh",
+      "name": "Xhosa",
+      "endonym": "isiXhosa"
+    },
+    {
+      "code": "st",
+      "name": "Sesotho",
+      "endonym": "Sesotho"
+    },
+    {
+      "code": "sg",
+      "name": "Sango",
+      "endonym": "Yângâ tî Sängö"
+    },
+    {
+      "code": "wo",
+      "name": "Wolof",
+      "endonym": "Wolof"
+    },
+    {
+      "code": "ha",
+      "name": "Hausa",
+      "endonym": "Hausa"
+    },
+    {
+      "code": "yo",
+      "name": "Yoruba",
+      "endonym": "Yorùbá"
+    },
+    {
+      "code": "ig",
+      "name": "Igbo",
+      "endonym": "Igbo"
+    },
+    {
+      "code": "ff",
+      "name": "Fulfulde",
+      "endonym": "Fulfulde"
+    },
+    {
+      "code": "mg",
+      "name": "Malagasy",
+      "endonym": "Malagasy"
+    }
+  ]
+}
