@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/", "destination": "/site/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/:path*", "destination": "https://walk-with-me-2nh1.onrender.com/:path*" }
+  ]
+}

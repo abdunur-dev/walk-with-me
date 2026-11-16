@@ -57,7 +57,7 @@ To show a tap-to-call staff contact in the help widget, set `STAFF_CONTACT_PHONE
 ### Add it to any page (Level 1)
 
 ```html
-<script src="https://YOUR-HOST/widget/walk-with-me.js" data-api="https://YOUR-HOST" data-lang="am" defer></script>
+<script src="https://walk-with-me-six.vercel.app/widget/walk-with-me.js" data-api="https://walk-with-me-six.vercel.app" data-lang="am" defer></script>
 ```
 
 `data-lang` = `en` or `am`, `data-mode` = `normal` or `simple`, `data-offline-only="true"` skips the API and answers from `faq-bundle.js`. It also works when a page is opened from `file://`.

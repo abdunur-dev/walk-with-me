@@ -69,8 +69,8 @@
       <h2 id="h-level1">Install in one line (Level 1)</h2>
       <p>Add this before the closing body tag on every page. The helper appears in the same corner on every page.</p>
       <div class="code-block">
-<pre id="code-l1" tabindex="0" aria-label="Script tag">&lt;script src="https://YOUR-HOST/widget/walk-with-me.js"
-        data-api="https://YOUR-HOST"
+<pre id="code-l1" tabindex="0" aria-label="Script tag">&lt;script src="https://walk-with-me-six.vercel.app/widget/walk-with-me.js"
+        data-api="https://walk-with-me-six.vercel.app"
         data-lang="am"
         data-mode="normal"
         defer&gt;&lt;/script&gt;</pre>
@@ -96,7 +96,7 @@
       <p>Every feature has an endpoint. Read the interactive reference at <a href="/docs">/docs</a> or download the <a href="/openapi.json">OpenAPI document</a>.</p>
       <p>Ask a question:</p>
       <div class="code-block">
-<pre id="code-chat" tabindex="0" aria-label="Chat example">curl -X POST https://YOUR-HOST/v1/chat \
+<pre id="code-chat" tabindex="0" aria-label="Chat example">curl -X POST https://walk-with-me-six.vercel.app/v1/chat \
   -H "Content-Type: application/json" \
   -d '{"text": "Which skills do employers ask for?", "lang": "en", "mode": "normal"}'</pre>
         <button type="button" class="btn btn-secondary btn-small" data-copy="#code-chat">Copy</button>
@@ -104,7 +104,7 @@
       <p>The answer comes with <code>citations</code> (section title and link), <code>provider</code> and <code>answered_offline</code>. If nothing in the course matches, <code>not_in_course</code> is true and <code>handoff_suggested</code> offers a person.</p>
       <p>List jobs with a support filter:</p>
       <div class="code-block">
-<pre id="code-jobs" tabindex="0" aria-label="Jobs example">curl "https://YOUR-HOST/v1/jobs?city=Adama&amp;supports=sign_language_interpreter"</pre>
+<pre id="code-jobs" tabindex="0" aria-label="Jobs example">curl "https://walk-with-me-six.vercel.app/v1/jobs?city=Adama&amp;supports=sign_language_interpreter"</pre>
         <button type="button" class="btn btn-secondary btn-small" data-copy="#code-jobs">Copy</button>
       </div>
       <p>Errors always look like this, so you can show them to people as they are:</p>
@@ -116,7 +116,7 @@
       <h2 id="h-level3">Jobs as schema.org data (Level 3)</h2>
       <p>Add <code>format=jsonld</code> to get the job list as <code>schema.org/JobPosting</code> objects. Job boards and search engines can read them. Supports offered are listed in <code>jobBenefits</code>.</p>
       <div class="code-block">
-<pre id="code-ld" tabindex="0" aria-label="JSON-LD example">curl "https://YOUR-HOST/v1/jobs?format=jsonld"</pre>
+<pre id="code-ld" tabindex="0" aria-label="JSON-LD example">curl "https://walk-with-me-six.vercel.app/v1/jobs?format=jsonld"</pre>
         <button type="button" class="btn btn-secondary btn-small" data-copy="#code-ld">Copy</button>
       </div>
     </section>

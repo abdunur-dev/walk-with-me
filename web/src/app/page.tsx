@@ -3,8 +3,8 @@ import { AmharicArt, ArrowUpRight, HelperArt, JobsArt, ShareArt, ShowMeArt, Spar
 import { CodeBlock, CtaBar } from "@/components/SiteChrome";
 import { SAVANNA_DEMO } from "@/lib/api";
 
-const INSTALL = `<script src="https://YOUR-HOST/widget/walk-with-me.js"
-        data-api="https://YOUR-HOST" data-lang="am" defer></script>`;
+const INSTALL = `<script src="https://walk-with-me-six.vercel.app/widget/walk-with-me.js"
+        data-api="https://walk-with-me-six.vercel.app" data-lang="am" defer></script>`;
 
 const FEATURES = [
   {

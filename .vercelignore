@@ -1,0 +1,4 @@
+# Vercel only proxies to the Render app (see vercel.json). Upload nothing else,
+# so Vercel does not try to build api/*.py as Python functions or build web/.
+/*
+!vercel.json

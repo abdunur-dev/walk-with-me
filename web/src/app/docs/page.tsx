@@ -11,18 +11,18 @@ export const metadata: Metadata = {
   openGraph: { title: "Install docs · Walk With Me", description: "One script tag, a REST API and open job data." },
 };
 
-const L1 = `<script src="https://YOUR-HOST/widget/walk-with-me.js"
-        data-api="https://YOUR-HOST"
+const L1 = `<script src="https://walk-with-me-six.vercel.app/widget/walk-with-me.js"
+        data-api="https://walk-with-me-six.vercel.app"
         data-lang="am"
         data-mode="normal"
         defer></script>`;
-const CHAT = `curl -X POST https://YOUR-HOST/v1/chat \\
+const CHAT = `curl -X POST https://walk-with-me-six.vercel.app/v1/chat \\
   -H "Content-Type: application/json" \\
   -d '{"text": "Which skills do employers ask for?", "lang": "en", "mode": "normal"}'`;
-const JOBS = `curl "https://YOUR-HOST/v1/jobs?city=Adama&supports=sign_language_interpreter"`;
+const JOBS = `curl "https://walk-with-me-six.vercel.app/v1/jobs?city=Adama&supports=sign_language_interpreter"`;
 const ERR = `{"error": {"code": "invalid_phone", "message": "That phone number is not in a format we can text.",
            "fix": "Use a number like 0911 234567, 0711 234567 or +251 911 234567."}}`;
-const LD = `curl "https://YOUR-HOST/v1/jobs?format=jsonld"`;
+const LD = `curl "https://walk-with-me-six.vercel.app/v1/jobs?format=jsonld"`;
 const DOCKER = `cp .env.example .env      # set STAFF_TOKEN at least
 docker compose up         # API, widget and pages on http://localhost:8000
 docker compose --profile local-ai up   # also starts Ollama`;
