@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "echo 'nothing to install: Vercel proxies to Render'",
-  "buildCommand": "echo 'nothing to build: Vercel proxies to Render'",
+  "buildCommand": "mkdir -p public && echo 'Vercel proxies this site to Render' > public/_vercel-proxy.txt",
+  "outputDirectory": "public",
   "redirects": [
     { "source": "/", "destination": "/site/", "permanent": false }
   ],
