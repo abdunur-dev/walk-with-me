@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'nothing to install: Vercel proxies to Render'",
+  "buildCommand": "echo 'nothing to build: Vercel proxies to Render'",
   "redirects": [
     { "source": "/", "destination": "/site/", "permanent": false }
   ],
